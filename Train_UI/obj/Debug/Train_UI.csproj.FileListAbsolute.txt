@@ -1,0 +1,14 @@
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\Train_UI.exe.config
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\Train_UI.exe
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\Train_UI.pdb
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\MySql.Data.dll
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\Google.Protobuf.dll
+C:\Users\god\source\repos\Train_UI\Train_UI\bin\Debug\MySql.Data.xml
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.csprojAssemblyReference.cache
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form1.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Properties.Resources.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.csproj.GenerateResource.cache
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.csproj.CoreCompileInputs.cache
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.csproj.CopyComplete
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.exe
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.pdb
