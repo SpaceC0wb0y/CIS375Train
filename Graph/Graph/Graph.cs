@@ -196,6 +196,77 @@ namespace Graph
 
             return true;
         }
+
+        //Description: Checks graph (vertex collection of graph) for the vertex based on vertex ID
+        //Pre-Condition: None
+        //Post-Condition: Returns the vertex if found, throws exception if not found
+        public Vertex FindVertex(string name)
+        {
+            foreach(var item in vertices)
+            {
+                if (name == item.GetID())
+                {
+                    return item;
+                }
+            }
+
+            throw new Exception("Vertex not found in graph");
+        }
+
+        //Description: Checks graph (edge collection of graph) for the edge based on edge ID
+        //Pre-Condition: None
+        //Post-Condition: Returns the edge if found, throws exception if not found
+        public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
+        {
+            foreach(var item in edges)
+            {
+                if (startVertex == item.GetSource())
+                {
+                    if (endVertex == item.GetDest())
+                    {
+                        if (name == item.GetID())
+                        {
+                            return item;
+                        }
+                    }
+                }
+
+                if (endVertex == item.GetSource())
+                {
+                    if (startVertex == item.GetDest())
+                    {
+                        if (name == item.GetID())
+                        {
+                            return item;
+                        }
+                    }
+                }
+            }
+
+            throw new Exception("Edge not found in graph");
+        }
+
+        //Description: Given two vertices, the method checks if they are adjacent in the graph
+        //Pre-Condition: None
+        //Post-Condition: Returns true if they are adjacent, false if not
+        public bool IsAdjacent(Vertex source, Vertex dest)
+        {
+            //an iterator to traverse the adjacency list for the source vertex
+            LinkedList<Node> iterator = adjacencyList[source];
+
+            //traverses the linked list to check each node for the destination vertex
+            foreach(var item in iterator)
+            {
+                //checks if the destination vertex is found in the current node 
+                //of adjacency list
+                if (dest == item.GetVertex())
+                {
+                    return true;  //success, vertices are adjacent
+                }
+            }
+
+            return false;  //vertices are not adjacent
+        }
     }
 
     //Description: This class represents a single node within a single linked within the adjacency list
@@ -315,6 +386,22 @@ namespace Graph
 
             this.source = source;
             this.dest = dest;
+        }
+
+        //Description: Returns the edge ID
+        //Pre-Condition: None
+        //Post-Condition: Returns ID as a string
+        public string GetID()
+        {
+            return edgeID;
+        }
+
+        //Description: Return the edge weight
+        //Pre-Condition: None
+        //Post-Condition: Return edge weight as an int
+        public int GetWeight()
+        {
+            return weight;
         }
 
         //Description: Getter for source vertex
