@@ -57,7 +57,7 @@ namespace Graph
             {
                 return false;  //fail
             }
-            //vertex is orignal, will add to graph
+            //vertex is original, will add to graph
             else
             {
                 adjacencyList.Add(V, new LinkedList<Node>());
@@ -66,12 +66,45 @@ namespace Graph
             }
         }
 
+
+        //Description: Method returns number of vertices in the graph
+        //Pre-Condition: None
+        //Post-Condition: Count of vertices returned
+        public int NumVertices()
+        {
+            return vertices.Count;
+        }
+
+        //Description: Method returns number of edges in the graph
+        //Pre-Condition: None
+        //Post-Condition: Count of edges returned
+        public int NumEdges()
+        {
+            return edges.Count;
+        }
+
+        public List<Vertex> GetVertices()
+        {
+            return vertices;
+        }
+
+        public List<Edge> GetEdges()
+        {
+            return edges;
+        }
+
         //Description: Method adds a new edge to the graph by adding it to the adjacency
         //lists of both vertices that it connects.
         //Pre-Condition: Edge object is made beforehand
         //Post-Condition: Adds edge E to graph and edge collection
         public bool AddEdge(Edge E)
         {
+            //this variable checks if the source and destination vertices
+            //were already marked as adjacent in the graph, meaning an edge between 
+            //them was already added therefore each of their respective adjacency lists
+            //have a node dedicated to each other
+            bool adjacentNodeFound = false;
+
             //checks if source vertex exists in graph
             if (!adjacencyList.ContainsKey(E.GetSource()))
             {
@@ -83,27 +116,50 @@ namespace Graph
                 return false;  //it isn't
             }
 
+            //checks if specific edge already exists in graph
+            if (edges.Contains(E))
+            {
+                return false;
+            }
+
             //traverses the adjacency linked list for that particular vertex
             LinkedList<Node> iterator = adjacencyList[E.GetSource()];
 
             foreach(var item in iterator)
             {
                 //finds which node in the list has the adjacent vertex
-                if (E.GetSource() == item.GetVertex())
+                if (E.GetDest() == item.GetVertex())
                 {
+                    adjacentNodeFound = true;
                     item.AddIncidentEdge(E);  //adds the edge to the incident edge list for that particular node
                 }
             }
 
+            //this is the first edge connecting two vertices
+            if (!adjacentNodeFound)
+            {
+                //creates a new element in source vertex's adjacency list
+                adjacencyList[E.GetSource()].AddLast(new Node(E.GetDest(), E));
+                Console.WriteLine("A new node is supposed to be made");
+            }
+
             //traverses the adjacency linked list for the other vertex connected by the edge
             iterator = adjacencyList[E.GetDest()];
+            adjacentNodeFound = false;   //resets boolean value
 
             foreach (var item in iterator)
             {
-                if (E.GetDest() == item.GetVertex())
+                if (E.GetSource() == item.GetVertex())
                 {
+                    adjacentNodeFound = true;
                     item.AddIncidentEdge(E);  //adds the edge to the incident edge list for that particular node
                 }
+            }
+
+            if (!adjacentNodeFound)
+            {
+                //creates a new element in destination vertex's adjacency list
+                adjacencyList[E.GetDest()].AddLast(new Node(E.GetSource(), E));
             }
 
             edges.Add(E);  //adds edge to edge list field
@@ -135,7 +191,7 @@ namespace Graph
                     if (node.GetVertex() == V)
                     {
                         //gets all incident edges between V and the current vertex
-                        List<Edge> removal = node.GetEdges();
+                        List<Edge> removal = node.GetIncidentEdges();
                         foreach(var tempEdge in removal)
                         {
                             edges.Remove(tempEdge);  //removes all of the incident edges from the edge list
@@ -175,8 +231,21 @@ namespace Graph
                 //with the destination vertex
                 if (node.GetVertex() == tempDest)
                 {
+                    //List<Edge> checkSum = node.GetIncidentEdges();
+                    //foreach(var item in checkSum)
+                    //{
+                    //    Console.WriteLine(item);
+                    //}
                     //removes the edge from the local edge list of that node
-                    node.RemoveEdge(E);
+                    node.RemoveIncidentEdge(E);
+
+                    //checks if the incident edge collection is now empty
+                    List<Edge> checkSum = node.GetIncidentEdges();
+                    if (checkSum.Count == 0)
+                    {
+                        adjacencyList[tempSource].Remove(node);
+                    }
+                    //Console.WriteLine(checkSum.Count);
                     break;
                 }
             }
@@ -187,7 +256,19 @@ namespace Graph
             {
                 if (node.GetVertex() == tempSource)
                 {
-                    node.RemoveEdge(E);
+                    node.RemoveIncidentEdge(E);
+                    //checks if the incident edge collection is now empty
+
+                    List<Edge> checkSum = node.GetIncidentEdges();
+                    //foreach(var item in checkSum)
+                    //{
+                    //    Console.WriteLine(item);
+                    //}
+                    if (checkSum.Count == 0)
+                    {
+                        adjacencyList[tempDest].Remove(node);
+                    }
+                    //Console.WriteLine(checkSum.Count);
                     break;
                 }
             }
@@ -195,6 +276,23 @@ namespace Graph
             edges.Remove(E);  //removes from master edge list
 
             return true;
+        }
+
+        //Description: Returns the adjacency list for the specified vertex if it exists in the graph
+        //Pre-Condition: None
+        //Post-Condition: Returns the adjacency list of ther vertex or throws exception if vertex is
+        //not in the graph
+        public LinkedList<Node> GetList(Vertex V)
+        {
+            if (!adjacencyList.ContainsKey(V))
+            {
+                throw new Exception("Vertex is not in graph");
+            }
+            else
+            {
+                return adjacencyList[V];
+            }
+          
         }
 
         //Description: Checks graph (vertex collection of graph) for the vertex based on vertex ID
@@ -251,6 +349,18 @@ namespace Graph
         //Post-Condition: Returns true if they are adjacent, false if not
         public bool IsAdjacent(Vertex source, Vertex dest)
         {
+            bool isAdjacentInSource = false;  //is adjacency proven in source vertex's adjacency list?
+            bool isAdjacentInDest = false;  //is adjacency proven in destination vertex's adjacency list?
+
+            if(!adjacencyList.ContainsKey(source))
+            {
+                return false;
+            }
+            if (!adjacencyList.ContainsKey(dest))
+            {
+                return false;
+            }
+
             //an iterator to traverse the adjacency list for the source vertex
             LinkedList<Node> iterator = adjacencyList[source];
 
@@ -261,13 +371,37 @@ namespace Graph
                 //of adjacency list
                 if (dest == item.GetVertex())
                 {
-                    return true;  //success, vertices are adjacent
+                    isAdjacentInSource = true;  //success, vertices are adjacent in one list
                 }
             }
 
-            return false;  //vertices are not adjacent
+            //an iterator to traverse the adjacency list for the destination vertex
+            iterator = adjacencyList[dest];
+
+            //traverses the linked list to check each node for the source vertex
+            foreach (var item in iterator)
+            {
+                //checks if the source vertex is found in the current node 
+                //of adjacency list
+                if (source == item.GetVertex())
+                {
+                    isAdjacentInDest = true;  //success, vertices are adjacent in one list
+                }
+            }
+            
+            //was adjacency shown for both adjacency lists
+            if (isAdjacentInSource && isAdjacentInDest)
+            {
+                return true;  //vertices are adjacent 
+            }
+            else
+            {
+                return false;  //vertices are not adjacent
+            }
         }
     }
+
+
 
     //Description: This class represents a single node within a single linked within the adjacency list
     //the node stores the adjacent vertex to the source vertex and all edges that connects the two vertices
@@ -295,8 +429,10 @@ namespace Graph
             return V;
         }
 
-        /*TEST THIS*/
-        public List<Edge> GetEdges()
+        //Description: Creates a list of all incident edges between two vertices
+        //Pre-Condition: None
+        //Post-Condition: Returns a list of all adjacent edges
+        public List<Edge> GetIncidentEdges()
         {
             var edgeList = new List<Edge>();
 
@@ -319,7 +455,7 @@ namespace Graph
         //Description: The method removes the edge from the incident edge collection
         //Pre-Condition: The edge exists within the collection
         //Post-Condition: The edge E is removed from teh incident edge collection
-        public void RemoveEdge(Edge E)
+        public void RemoveIncidentEdge(Edge E)
         {
             incidentEdges.Remove(E);
         }
@@ -329,6 +465,7 @@ namespace Graph
         //Post-Condition: Prints out the Vertex info and all stored edge info line by line
         public void PrintContents()
         {
+            Console.WriteLine("Node:");
             Console.WriteLine(V);  //prints vertex info
             foreach (var item in incidentEdges)  //iterates through edge list
             {
