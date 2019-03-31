@@ -17,6 +17,7 @@ namespace Train_UI
     {
         public Form1()
         {
+            InitializeComponent();
             Console.WriteLine("Getting Connection ...");
             MySqlConnection conn = DBUtils.GetDBConnection();
 
@@ -34,7 +35,7 @@ namespace Train_UI
             }
 
             Console.Read();
-            InitializeComponent();
+            
             
 
 
@@ -50,6 +51,21 @@ namespace Train_UI
             Form2 secondForm = new Form2();
             secondForm.Show();
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = "Text files | *.txt"; // file types, that will be allowed to upload
+            dialog.Multiselect = false; // allow/deny user to upload more than one file at a time
+            if (dialog.ShowDialog() == DialogResult.OK) // if user clicked OK
+            {
+                String path = dialog.FileName; // get name of file
+                using (StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open), new UTF8Encoding())) // do anything you want, e.g. read it
+                {
+                    // ...
+                }
+            }
         }
     }
 }
