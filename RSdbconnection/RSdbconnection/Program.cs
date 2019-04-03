@@ -59,6 +59,8 @@ namespace RSdbconnection
                               MessageBox.Show("Cannot connect to server.  Contact administrator");
                               break;
 
+                              //John is GOAT
+
                          case 1045:
                               MessageBox.Show("Invalid username/password, please try again");
                               break;
