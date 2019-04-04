@@ -134,20 +134,9 @@ namespace RSdbconnection
                     this.CloseConnection();
                }
           }
-          //Specify Attributes again, comma seperated
-          public List<string>[] Select(string query, string specifyAttr)
+          //Provide attributes again, comma seperated
+          public void Select(string query)
           {
-               //Create a list to store the result
-               string[] splitAttr= specifyAttr.Split(',');
-
-               List<string>[] list = new List<string>[splitAttr.Length];
-
-               for(int i = 0; i < list.Length; i++)
-               {
-                    list[i] = new List<string>();
-               }
-
-
                //Open connection
                if (this.OpenConnection() == true)
                {
@@ -155,15 +144,21 @@ namespace RSdbconnection
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     //Create a data reader and Execute the command
                     MySqlDataReader dataReader = cmd.ExecuteReader();
-
-                    //Read the data and store them in the list
+                    //Count number of fields in retreived from the table
+                    int fieldCount = dataReader.FieldCount;
+                    for (int i = 0; i < fieldCount; i++)
+                    {
+                         Console.Write(dataReader.GetName(i).PadRight(15));
+                    }
+                    Console.WriteLine();
+                    
                     while (dataReader.Read())
                     {
-                         for (int i = 0; i < list.Length; i++)
+                         for(int i = 0; i < fieldCount; i++)
                          {
-                              string x = splitAttr[i];
-                              list[i].Add(dataReader[x]);
+                              Console.Write(dataReader[i].ToString().PadRight(15));
                          }
+                         Console.WriteLine(); //End line -> new record
                     }
 
                     //close Data Reader
@@ -171,13 +166,10 @@ namespace RSdbconnection
 
                     //close Connection
                     this.CloseConnection();
-
-                    //return list to be displayed
-                    return list;
                }
                else
                {
-                    return list;
+                    Console.WriteLine("Connection is not open!!!!!!");
                }
           }
 
