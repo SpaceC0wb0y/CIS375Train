@@ -85,8 +85,8 @@ namespace RSdbconnection
           }
 
           //Insert statement
-          // specify attributes in this format "(attribute1, attribute2, ..)"
-          // specify values in this format "('value1', 'value2'..)
+          //Pre: Must pass an insert query through this function with appropriate syntax based on mySQL
+          //Post: Inserts a new record into the database
           public void Insert(string query)
           {
                //open connection
@@ -103,8 +103,9 @@ namespace RSdbconnection
                }
           }
 
-
-           public void Delete(string query)
+          //Pre: Must pass a delete query through this function with appropriate syntax based on mySQL
+          //Post: deletes the record of a given condition specified in query
+          public void Delete(string query)
            {
                if (this.OpenConnection() == true)
                {
@@ -113,7 +114,8 @@ namespace RSdbconnection
                     this.CloseConnection();
                }
            }
-
+          //Pre: Must pass an update query through this function with appropriate syntax based on mySQL
+          //Post: Updates the record of a given condition specified in query
           public void Update(string query)
           { 
 
@@ -134,17 +136,20 @@ namespace RSdbconnection
                     this.CloseConnection();
                }
           }
-          //Provide attributes again, comma seperated
-          public void Select(string query)
+          //Pre: Must pass a select query through this function with appropriate syntax based on mySQL
+          //Post: Prints the records fetched on console & stores data into list of lists
+          public List<List<string>> Select(string query)
           {
                //Open connection
+               List<List<string>> queryStorage = new List<List<string>>();
                if (this.OpenConnection() == true)
                {
                     //Create Command
                     MySqlCommand cmd = new MySqlCommand(query, connection);
                     //Create a data reader and Execute the command
                     MySqlDataReader dataReader = cmd.ExecuteReader();
-                    //Count number of fields in retreived from the table
+
+                    //Count number of fields in retreived from the table & PRINT them on console
                     int fieldCount = dataReader.FieldCount;
                     for (int i = 0; i < fieldCount; i++)
                     {
@@ -152,12 +157,16 @@ namespace RSdbconnection
                     }
                     Console.WriteLine();
                     
+                    //Read records fetched from database & store them in list of lists.
                     while (dataReader.Read())
                     {
+                         List<string> temp = new List<string>();
                          for(int i = 0; i < fieldCount; i++)
                          {
                               Console.Write(dataReader[i].ToString().PadRight(15));
+                              temp.Add(dataReader[i].ToString()); //Add all fields of query into inner list
                          }
+                         queryStorage.Add(temp); //Store the record with fields(stored in temp) into outer list
                          Console.WriteLine(); //End line -> new record
                     }
 
@@ -166,10 +175,12 @@ namespace RSdbconnection
 
                     //close Connection
                     this.CloseConnection();
+                    return queryStorage; //Filled with query records
                }
                else
                {
-                    Console.WriteLine("Connection is not open!!!!!!");
+                    Console.WriteLine("Connection is not open!");
+                    return queryStorage; //Empty (most likely)
                }
           }
 
