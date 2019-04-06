@@ -11,17 +11,21 @@ namespace Graph
     {
         static void Main(string[] args)
         {
-            Vertex V1 = new Vertex("Vertex 1");
-            Vertex V2 = new Vertex("Vertex 2");
-            Vertex V3 = new Vertex("Vertex 3");
-            Vertex V4 = new Vertex("Vertex 4");
-            Edge E1 = new Edge("Edge A", V1, V2, 10);
-            Edge E2 = new Edge("Edge B", V1, V2, 15);
-            Edge E3 = new Edge("Edge C", V1, V2, 20);
-            Edge E4 = new Edge("Edge D", V4, V2, 38);
+            Vertex A = new Vertex("Vertex A");
+            Vertex B = new Vertex("Vertex B");
+            Vertex C = new Vertex("Vertex C");
+            Vertex D = new Vertex("Vertex D");
+            Vertex E = new Vertex("Vertex E");
+            Edge E1 = new Edge("Edge A to B", A, B, 6);
+            Edge E2 = new Edge("Edge A to B", A, D, 1);
+            Edge E3 = new Edge("Edge A to B", B, D, 2);
+            Edge E4 = new Edge("Edge A to B", D, E, 1);
+            Edge E5 = new Edge("Edge A to B", B, E, 2);
+            Edge E6 = new Edge("Edge A to B", B, C, 5);
+            Edge E7 = new Edge("Edge A to B", E, C, 5);
 
             ////////////////justin
-           
+
 
             ///////////////justin
 
@@ -46,10 +50,11 @@ namespace Graph
             //int count = test.NumVertices();
             //Console.WriteLine("Num: " + count);
 
-            test.AddVertex(V1);
-            test.AddVertex(V2);
-            test.AddVertex(V3);
-            test.AddVertex(V4);
+            test.AddVertex(A);
+            test.AddVertex(B);
+            test.AddVertex(C);
+            test.AddVertex(D);
+            test.AddVertex(E);
             //List<Vertex> vertices = test.GetVertices();
 
             //foreach (var item in vertices)
@@ -63,6 +68,10 @@ namespace Graph
             test.AddEdge(E2);
             test.AddEdge(E3);
             test.AddEdge(E4);
+            test.AddEdge(E5);
+            test.AddEdge(E6);
+            test.AddEdge(E7);
+
 
             //List<Edge> edges = test.GetEdges();
 
@@ -185,26 +194,26 @@ namespace Graph
             //    Console.WriteLine("They are not adjacent");
             //}
 
-            LinkedList<Node> testList = test.GetList(V1);
-            Console.WriteLine(testList.Count);
-            foreach (var item in testList)
-            {
-                item.PrintContents();
-            }
-            Console.WriteLine();
+            //LinkedList<Node> testList = test.GetList(V1);
+            //Console.WriteLine(testList.Count);
+            //foreach (var item in testList)
+            //{
+            //    item.PrintContents();
+            //}
+            //Console.WriteLine();
 
-            testList = test.GetList(V2);
-            Console.WriteLine(testList.Count);
-            foreach (var item in testList)
-            {
-                item.PrintContents();
-            }
+            //testList = test.GetList(V2);
+            //Console.WriteLine(testList.Count);
+            //foreach (var item in testList)
+            //{
+            //    item.PrintContents();
+            //}
 
-            Console.WriteLine("\n\n\n");
+            //Console.WriteLine("\n\n\n");
 
-            test.DijkstrasAlg(test, V1, V2);
+            test.DijkstrasAlg(test, A, C);
 
-            
+            Console.ReadLine();
 
             //test.RemoveEdge(E4);
             //testList = test.GetList(V2);

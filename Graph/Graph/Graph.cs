@@ -50,23 +50,124 @@ namespace Graph
         //Descrtiption: Method that traverses the graph to find the shortest distance between two vertexes by traversing edges
         //Pre-Condition: Both vertexes must exist on the graph
         //Post-Condition: Returns the shortest distance between the two vertexes and the path they took
+
+        public class ShortestPath
+        {
+            public Vertex vertex;
+            public int shortestDistance;
+            public Vertex previousVertex;
+
+
+        }
+
+
         public void DijkstrasAlg(Graph graph, Vertex source, Vertex dest)
         {
-            List<Edge> sourceEdges;
-            LinkedList<Node> Neighbors;
-            List<Edge> visitedEdge;
-            List<Vertex> verticies = graph.GetVertices();
+            int infinity = 1000000;
+            List<Vertex> unvisitedNodes = new List<Vertex>();
+            List<Vertex> visitedNodes = graph.GetVertices();
+            var currentVertex = source;
+            LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
+            int distance;
 
-            foreach (var vert in verticies)
+            List<ShortestPath> shortestPaths = new List<ShortestPath>();
+          
+            foreach (var item in unvisitedNodes)
             {
-                Neighbors = graph.GetList(vert);
-                foreach (var node in Neighbors)
+                if (item == currentVertex)
                 {
-                    
+                    shortestPaths.Add(new ShortestPath()
+                    {
+                        vertex = currentVertex,
+                        shortestDistance = 0,
+                        previousVertex = null
+                    });
                 }
-                
+                else
+                {
+                    shortestPaths.Add(new ShortestPath()
+                    {
+                        vertex = item,
+                        shortestDistance = infinity,
+                        previousVertex = null
+                    });
+                }
             }
-            Console.WriteLine();
+
+            while (unvisitedNodes.Count > 0)
+            {
+                //visit the unvisited vertex with the smallest known distance from the start vertex
+                currentVertex = shortestPaths.Where(x => !visitedNodes.Contains(x.vertex)).OrderBy(x => x.shortestDistance).First().vertex;
+
+                //for the current vertex, examine its unvisited neighbours
+                neighborUnvisitedNodes = graph.GetList(currentVertex);
+
+                //for the current vertex, calculate the distance of each neighbour form the start vertex
+                foreach(Node items in neighborUnvisitedNodes.Where(x => !visitedNodes.Contains(x.GetVertex())))
+                {
+                    distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance +
+                    items.GetIncidentEdges()[0].GetWeight();
+                    //if the calculated distance of a vertex is less than the kneow distance, update the shortest distance
+                    if (shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance > distance)
+                    {
+                        //update the previous vertex for each of the updated distances
+                        shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance = distance;
+                        shortestPaths.Where(x => x.vertex == items.GetVertex()).First().previousVertex = currentVertex;
+                    }
+                }
+
+                unvisitedNodes.Remove(currentVertex);
+                visitedNodes.Add(currentVertex);
+            }
+
+            //display the shortest path between two verticies
+            Console.WriteLine("shortest distance from a to c is:" + shortestPaths.Where(x => x.vertex == dest).First().shortestDistance);
+            Console.WriteLine("the shortest path from a to c is: ");
+
+            ShortestPath currentRow = shortestPaths.Where(x => x.vertex == dest).First();
+            List<Vertex> sp = new List<Vertex>();
+
+            while (currentRow.previousVertex != source)
+            {
+                sp.Add(currentRow.previousVertex);
+                currentRow = shortestPaths.Where(x => x.vertex == currentRow.previousVertex).First();
+            }
+
+            sp.Add(source);
+
+            sp.Reverse();
+
+            foreach (Vertex v in sp)
+            {
+                Console.WriteLine(v.GetID());
+            }
+
+
+
+
+
+
+
+
+
+
+            //List<Edge> sourceEdges;
+            //LinkedList<Node> Neighbors;
+            //List<Edge> visitedEdge;
+            //List<Vertex> verticies = graph.GetVertices();
+            
+
+
+            //foreach (var vert in verticies)
+            //{
+            //    Neighbors = graph.GetList(vert);
+            //    foreach (var node in Neighbors)
+            //    {
+            ////        edges = Neighbors.
+            //    }
+                
+            //}
+            
 
         }
 
