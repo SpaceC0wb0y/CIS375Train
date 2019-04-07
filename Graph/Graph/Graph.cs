@@ -408,8 +408,8 @@ namespace Graph
     //as well as accessors for them
     public class Node
     {
-        private Vertex V;
-        private List<Edge> incidentEdges;
+        private Vertex V;  //vertex at the other end of the edge
+        private List<Edge> incidentEdges;   //list of all edges between the source and destination vertex
 
         //Description: Constructor method for Node
         //Pre-Condition: Vertex must exist and be incident to source vertex
