@@ -64,8 +64,8 @@ namespace Graph
         public void DijkstrasAlg(Graph graph, Vertex source, Vertex dest)
         {
             int infinity = 1000000;
-            List<Vertex> unvisitedNodes = new List<Vertex>();
-            List<Vertex> visitedNodes = graph.GetVertices();
+            List<Vertex> unvisitedNodes = graph.GetVertices(); 
+            List<Vertex> visitedNodes = new List<Vertex>();
             var currentVertex = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
             int distance;
@@ -106,7 +106,7 @@ namespace Graph
                 foreach(Node items in neighborUnvisitedNodes.Where(x => !visitedNodes.Contains(x.GetVertex())))
                 {
                     distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance +
-                    items.GetIncidentEdges()[0].GetWeight();
+                    items.GetIncidentEdges()[0].GetWeight(); 
                     //if the calculated distance of a vertex is less than the kneow distance, update the shortest distance
                     if (shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance > distance)
                     {
@@ -120,12 +120,16 @@ namespace Graph
                 visitedNodes.Add(currentVertex);
             }
 
+
+
             //display the shortest path between two verticies
             Console.WriteLine("shortest distance from a to c is:" + shortestPaths.Where(x => x.vertex == dest).First().shortestDistance);
             Console.WriteLine("the shortest path from a to c is: ");
 
             ShortestPath currentRow = shortestPaths.Where(x => x.vertex == dest).First();
             List<Vertex> sp = new List<Vertex>();
+
+            sp.Add(dest);
 
             while (currentRow.previousVertex != source)
             {
