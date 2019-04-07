@@ -43,10 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clock.cs" />
     <Compile Include="Component_Test.cs" />
     <Compile Include="Crew.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Track.cs" />
+    <Compile Include="Train.cs" />
     <Compile Include="Vertex.cs" />
   </ItemGroup>
   <ItemGroup>

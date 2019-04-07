@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Components
 {
-    class Track
+    public class Track
     {
         private string trackID;
         private int cost;
@@ -18,7 +18,7 @@ namespace Components
         private bool isAvailable;
         private int distance;
 
-        Track(string trackID, IVertex source, IVertex destination, int distance)
+        public Track(string trackID, IVertex source, IVertex destination, int distance)
         {
             this.trackID = trackID;
             this.source = source;
