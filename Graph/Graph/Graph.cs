@@ -56,7 +56,7 @@ namespace Graph
             public Vertex vertex;
             public int shortestDistance;
             public Vertex previousVertex;
-
+            
 
         }
 
@@ -64,13 +64,14 @@ namespace Graph
         public void DijkstrasAlg(Graph graph, Vertex source, Vertex dest)
         {
             int infinity = 1000000;
-            List<Vertex> unvisitedNodes = graph.GetVertices(); 
+            List<Vertex> unvisitedNodes = new List<Vertex>();
+            unvisitedNodes = graph.GetVertices(); 
             List<Vertex> visitedNodes = new List<Vertex>();
             var currentVertex = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
-            int distance;
+            int distance;           
 
-            List<ShortestPath> shortestPaths = new List<ShortestPath>();
+        List<ShortestPath> shortestPaths = new List<ShortestPath>();
           
             foreach (var item in unvisitedNodes)
             {
@@ -105,8 +106,22 @@ namespace Graph
                 //for the current vertex, calculate the distance of each neighbour form the start vertex
                 foreach(Node items in neighborUnvisitedNodes.Where(x => !visitedNodes.Contains(x.GetVertex())))
                 {
-                    distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance +
-                    items.GetIncidentEdges()[0].GetWeight(); 
+                    int shortestEdge = 1000000;
+
+                    // find the shortest edge between two verticies and use that to calculate shortest path with
+                    for (int edgeNum = 0; edgeNum < items.GetIncidentEdges().Count(); edgeNum++)
+                    {
+                        if (items.GetIncidentEdges()[edgeNum].GetWeight() < shortestEdge)
+                        {
+                            shortestEdge = items.GetIncidentEdges()[edgeNum].GetWeight();
+                         
+                        }
+                        // if you want to see the ID of the shortest edge between the verticies
+                        //Console.WriteLine("The Shortest Edge for " + currentVertex.GetID() + " and " + items.GetVertex().GetID() + " is " + items.GetIncidentEdges()[edgeNum].GetID());
+                    }
+
+                    distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance + shortestEdge;
+                    //items.GetIncidentEdges()[0].GetWeight(); 
                     //if the calculated distance of a vertex is less than the kneow distance, update the shortest distance
                     if (shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance > distance)
                     {
@@ -120,11 +135,13 @@ namespace Graph
                 visitedNodes.Add(currentVertex);
             }
 
-
+            // put the visited nodes back into the graph
+            graph.vertices = visitedNodes;
 
             //display the shortest path between two verticies
-            Console.WriteLine("shortest distance from a to c is:" + shortestPaths.Where(x => x.vertex == dest).First().shortestDistance);
-            Console.WriteLine("the shortest path from a to c is: ");
+            Console.WriteLine("shortest distance from " + source.GetID() + " to " + dest.GetID() + " is: " + shortestPaths.Where(x => x.vertex == dest).First().shortestDistance);
+            Console.WriteLine("the shortest path from " + source.GetID() + " to " + dest.GetID() + " is: ");
+
 
             ShortestPath currentRow = shortestPaths.Where(x => x.vertex == dest).First();
             List<Vertex> sp = new List<Vertex>();
@@ -146,33 +163,7 @@ namespace Graph
                 Console.WriteLine(v.GetID());
             }
 
-
-
-
-
-
-
-
-
-
-            //List<Edge> sourceEdges;
-            //LinkedList<Node> Neighbors;
-            //List<Edge> visitedEdge;
-            //List<Vertex> verticies = graph.GetVertices();
-            
-
-
-            //foreach (var vert in verticies)
-            //{
-            //    Neighbors = graph.GetList(vert);
-            //    foreach (var node in Neighbors)
-            //    {
-            ////        edges = Neighbors.
-            //    }
-                
-            //}
-            
-
+            //reset info for next run
         }
 
         //Description: Method adds a vertex to the adjacency list graph

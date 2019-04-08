@@ -17,12 +17,15 @@ namespace Graph
             Vertex D = new Vertex("Vertex D");
             Vertex E = new Vertex("Vertex E");
             Edge E1 = new Edge("Edge A to B", A, B, 6);
-            Edge E2 = new Edge("Edge A to B", A, D, 1);
-            Edge E3 = new Edge("Edge A to B", B, D, 2);
-            Edge E4 = new Edge("Edge A to B", D, E, 1);
-            Edge E5 = new Edge("Edge A to B", B, E, 2);
-            Edge E6 = new Edge("Edge A to B", B, C, 5);
-            Edge E7 = new Edge("Edge A to B", E, C, 5);
+            Edge E2 = new Edge("Edge A to D", A, D, 1);
+            Edge E3 = new Edge("Edge B to D", B, D, 2);
+            Edge E4 = new Edge("Edge D to E", D, E, 1);
+            Edge E5 = new Edge("Edge B to E", B, E, 2);
+            Edge E6 = new Edge("Edge B to C", B, C, 5);
+            Edge E7 = new Edge("Edge E to C", E, C, 5);
+            Edge E8 = new Edge("Shorter path from E to C", E, C, 4);
+            Edge E9 = new Edge("Shorter path from B to C", B, C, 4);
+            Edge E10 = new Edge("Shorter path from A to B", A, B, 5);
 
             ////////////////justin
 
@@ -71,6 +74,9 @@ namespace Graph
             test.AddEdge(E5);
             test.AddEdge(E6);
             test.AddEdge(E7);
+            test.AddEdge(E8);
+            test.AddEdge(E9);
+            test.AddEdge(E10);
 
 
             //List<Edge> edges = test.GetEdges();
@@ -211,7 +217,14 @@ namespace Graph
 
             //Console.WriteLine("\n\n\n");
 
-            test.DijkstrasAlg(test, A, C);
+
+
+            test.DijkstrasAlg(test, B, A);
+
+
+            Console.Write("");
+
+            test.DijkstrasAlg(test, C, E);
 
             Console.ReadLine();
 
