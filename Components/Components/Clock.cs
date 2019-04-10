@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Components
 {
+    //This struct is only used when automatically running a clock.
+    //You can customize how much you want a clock to move forward per tick
     public struct TickInterval
     {
-        public int secondTick;
+        public int secondTick;  
         public int minuteTick;
         public int hourTick;
 
@@ -20,6 +22,9 @@ namespace Components
         }
     }
 
+    //This class represents a virtual clock that runs in the background of the system
+    //and keeps track of the current date and the current time of the day. This is the primary
+    //background system that governs how the simulation runs
     class Clock
     {
         private int hour;  //hours in current day

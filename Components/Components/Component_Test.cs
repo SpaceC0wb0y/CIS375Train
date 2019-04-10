@@ -24,7 +24,7 @@ namespace Components
 
             //list.ForEach(Console.WriteLine);
 
-            FreightStation train = new FreightStation("train1");
+            FreightStation train = new FreightStation("train1", 3, 10);
             //Console.WriteLine(train.GetID());
 
 
