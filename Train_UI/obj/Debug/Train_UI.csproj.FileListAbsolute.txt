@@ -13,3 +13,4 @@ C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.csproj.CopyComple
 C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.exe
 C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.pdb
 C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form2.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form3.resources

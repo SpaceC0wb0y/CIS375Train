@@ -75,5 +75,10 @@ namespace Train_UI
             }*/
 
         }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
