@@ -12,17 +12,22 @@ namespace Components
         private string trackID;  
         private int cost;  //cost to install it
         private int numTimesUsed;  //Number of times a train went on it
-        private IVertex source; //source station/hub
-        private IVertex destination; //station/hub opposite to source
+        private Vertex source; //source station/hub
+        private Vertex destination; //station/hub opposite to source
         private int numDetectedCollisions; 
         private bool isInMaintenance;
         private bool isAvailable;
         private int distance;  //weight of edge
 
+        public Track()
+        {
+            ;
+        }
+
         //Description: Cosntructor method
         //Pre-Condition: None
         //Post-Condition: New Track object with fields initialized
-        public Track(string trackID, IVertex source, IVertex destination, int distance)
+        public Track(string trackID, Vertex source, Vertex destination, int distance)
         {
             this.trackID = trackID;
             this.source = source;
@@ -46,7 +51,7 @@ namespace Components
         //Description: Returns the source station/hub (one end of an edge)
         //Pre-Condition: None
         //Post-Condition: Returns source vertex
-        public IVertex GetSource()
+        public Vertex GetSource()
         {
             return source;
         }
@@ -54,7 +59,7 @@ namespace Components
         //Description: Returns the destination vertex, station/hub (other end of an edge)
         //Pre-Condition: None
         //Post-Condition: Returns destination vertex
-        public IVertex GetDest()
+        public Vertex GetDest()
         {
             return destination;
         }

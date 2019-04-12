@@ -10,14 +10,16 @@ namespace Components
     //I decided to make a vertex interface and have the station and hub classes
     //implement it. It is empty because I am not sharing functionality between
     //stations and hubs
-    public interface IVertex
+    public abstract class Vertex
     {
-        
+        public bool IsFreightStation { get; set; }
+        public bool IsPassengerStation { get; set; }
+        public bool IsHub { get; set; }
     }
 
     //Description: This is the base class for both passenger and freight stations
     //that holds common data and methods between the two
-    public class Station : IVertex
+    public class Station : Vertex
     {
         protected string stationID;
         protected int numTrainsVisited; 
@@ -29,17 +31,17 @@ namespace Components
         protected int minOff; //minimum number of people getting off a train
         protected int maxOff; //maximum number of people getting off a train
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Gets the ID for a station
+        //Pre-Condition: None
+        //Post-Condition: Returns station ID field
         public string GetID()
         {
             return stationID;
         }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: This allows a train to signal that it is entering a station
+        //Pre-Condition: None
+        //Post-Condition: 
         public bool Enter()
         {
             //there will be more code when adding in the max trains
@@ -67,25 +69,25 @@ namespace Components
             }
         }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Gets the number of trains that visit the station in a given time period
+        //Pre-Condition: None
+        //Post-Condition: Return nuber of trains visited 
         public int GetNumTrainsVisited()
         {
             return numTrainsVisited;
         }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Gets the number of trains docked at a station
+        //Pre-Condition: None
+        //Post-Condition: Returns number of trains docked at a station
         public int GetNumTrainsParked()
         {
             return numTrainsParked;
         }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Gets the fixed ticket price at a station
+        //Pre-Condition: None
+        //Post-Condition: Returns ticket price
         public int GetTicketPrice()
         {
             return ticketPrice;
@@ -93,13 +95,14 @@ namespace Components
         
     }
 
+    //This class represents freight stations
     public class FreightStation : Station
     {
-        private int amountDelivered = 0;
+        private int amountDelivered = 0;  //amount of cargo delivered 
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Constructor method
+        //Pre-Condition: None
+        //Post-Condition: Creates and intializes a new object
         public FreightStation(string stationID, int maxTrains, int ticketCost)
         {
             this.stationID = stationID;
@@ -107,6 +110,9 @@ namespace Components
             amountDelivered = 0;
             maxNumberOfTrains = maxTrains;
             ticketPrice = ticketCost;
+            IsFreightStation = true;
+            IsPassengerStation = false;
+            IsHub = false;
         }
 
         //Description:
@@ -152,6 +158,9 @@ namespace Components
             this.maxOn = maxOn;
             this.minOff = minOff;
             this.maxOff = maxOff;
+            IsFreightStation = false;
+            IsPassengerStation = true;
+            IsHub = false;
         }
 
         //Description: Gets the number of people that arrived/departed a station in givent time period
@@ -204,7 +213,7 @@ namespace Components
 
     //This class represents hubs where trains and crews depart from at the beginning of the 
     //day/shift respectively and return to at the end of the day/shift
-    public class Hub : IVertex
+    public class Hub : Vertex
     {
         private string hubID;  
         private int numTimesUsed;  
@@ -216,6 +225,9 @@ namespace Components
         {
             this.hubID = hubID;
             numTimesUsed = 0;
+            IsFreightStation = false;
+            IsPassengerStation = false;
+            IsHub = true;
         }
 
         //Description: Gets the hub ID
