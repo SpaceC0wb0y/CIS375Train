@@ -231,11 +231,6 @@ namespace Graph
                 //with the destination vertex
                 if (node.GetVertex() == tempDest)
                 {
-                    //List<Edge> checkSum = node.GetIncidentEdges();
-                    //foreach(var item in checkSum)
-                    //{
-                    //    Console.WriteLine(item);
-                    //}
                     //removes the edge from the local edge list of that node
                     node.RemoveIncidentEdge(E);
 
@@ -245,7 +240,6 @@ namespace Graph
                     {
                         adjacencyList[tempSource].Remove(node);
                     }
-                    //Console.WriteLine(checkSum.Count);
                     break;
                 }
             }
@@ -257,18 +251,14 @@ namespace Graph
                 if (node.GetVertex() == tempSource)
                 {
                     node.RemoveIncidentEdge(E);
-                    //checks if the incident edge collection is now empty
 
+                    //checks if the incident edge collection is now empty
                     List<Edge> checkSum = node.GetIncidentEdges();
-                    //foreach(var item in checkSum)
-                    //{
-                    //    Console.WriteLine(item);
-                    //}
+                    
                     if (checkSum.Count == 0)
                     {
                         adjacencyList[tempDest].Remove(node);
                     }
-                    //Console.WriteLine(checkSum.Count);
                     break;
                 }
             }
@@ -316,15 +306,19 @@ namespace Graph
         //Post-Condition: Returns the edge if found, throws exception if not found
         public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
         {
+            //checks if startVertex is one of the ends of the edge
             foreach(var item in edges)
             {
+                //startVertex is the source 
                 if (startVertex == item.GetSource())
                 {
+                    //endVertex is the destination
                     if (endVertex == item.GetDest())
                     {
+                        //checks if the edge name and current edgeID match
                         if (name == item.GetID())
                         {
-                            return item;
+                            return item;  //return the edge because its found
                         }
                     }
                 }
@@ -341,7 +335,7 @@ namespace Graph
                 }
             }
 
-            throw new Exception("Edge not found in graph");
+            throw new Exception("Edge not found in graph");  //edge is not found
         }
 
         //Description: Given two vertices, the method checks if they are adjacent in the graph
@@ -352,6 +346,7 @@ namespace Graph
             bool isAdjacentInSource = false;  //is adjacency proven in source vertex's adjacency list?
             bool isAdjacentInDest = false;  //is adjacency proven in destination vertex's adjacency list?
 
+            //checks if both vertices are in the graph
             if(!adjacencyList.ContainsKey(source))
             {
                 return false;
