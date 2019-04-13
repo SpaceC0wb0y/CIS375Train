@@ -13,12 +13,14 @@ using MySql.Data.MySqlClient;
 
 namespace Train_UI
 {
+    
     public partial class Form1 : Form
     {
+        DBConnect trainconnect = new DBConnect();
         public Form1()
         {
             InitializeComponent();
-            DBConnect trainconnect = new DBConnect();
+            
             
             
             
@@ -65,8 +67,9 @@ namespace Train_UI
             return count;
         }
 
-        private void button2_Click(object sender, EventArgs e) // Station
+        private void button2_Click(object sender, EventArgs e)
         {
+
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Text files | *.txt"; // file types, that will be allowed to upload
             dialog.Multiselect = false; // allow/deny user to upload more than one file at a time
@@ -76,37 +79,116 @@ namespace Train_UI
                 using (StreamReader reader = new StreamReader(new FileStream(path, FileMode.Open), new UTF8Encoding())) // do anything you want, e.g. read it
                 {
                     string content = reader.ReadToEnd(); // Reads whole file puts into string
+
                     using (StringReader stringread = new StringReader(content)) // parses string line by line
                     {
-                        int numLine = Countline(content);
                         string line = string.Empty;
                         string[] storeline;
-                        int i = 0;
-                        int seqnum; //Sequence number stored here
+                        //int i = 0;
+                        int seqnum;
+                        int hubnum = 0;
+                        int stationnum = 0;
+                        int edgenum = 0;
+                        int locomotivenum = 0;
+                        string table = string.Empty;
+
+
+                        int j = 0;
                         do
                         {
-                            line = reader.ReadLine();
+
+                            line = stringread.ReadLine();
                             if (line != null)
                             {
-                                // do something with the line
-                                storeline = line.Split(null);
-                                if (i == 0)
+
+                                storeline = line.Split(new char[] { ' ', '"', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (j == 0)
                                 {
-                                    string store2 = storeline[0];
-                                    store2 = store2.Replace("(H)", "0");
-                                    seqnum = Convert.ToInt32(store2);
+                                    var telaBuilder = new StringBuilder(storeline[0]);
+                                    telaBuilder[0] = '0';
+                                    string hold = telaBuilder.ToString();
+                                    seqnum = Convert.ToInt32(hold);
+                                    
+                                    for (int i = 1; i < storeline.Length; i++)
+                                    {
+                                        if (storeline[i] != "")
+                                        {
+                                            //label2.Text += " " + storeline[i];
+                                        }
+                                        else
+                                        {
+
+                                        }
+                                    }
+
 
                                 }
-                                else if (i == numLine){
-                                    //Trailer Info
+
+                                else if (storeline.Length == 0)
+                                {
+                                    // Do Nothing
+                                }
+
+                                else if (storeline[0] == "C")
+                                {
+                                    if (storeline[1] != "" && storeline[1] == "HUB")
+                                    {
+                                        hubnum = Convert.ToInt32(storeline[2]);
+                                        table = "HUB";
+                                        //label3.Text = table;
+
+                                    }
+
+                                    else if (storeline[1] != "" && storeline[1] == "STATION")
+                                    {
+                                        stationnum = Convert.ToInt32(storeline[2]);
+                                        table = "STATION";
+
+                                    }
+                                    else if (storeline[1] != "" && storeline[1] == "EDGE")
+                                    {
+                                        edgenum = Convert.ToInt32(storeline[2]);
+                                        table = "EDGE";
+
+                                    }
+                                    else if (storeline[1] != "" && storeline[1] == "LOCOMOTIVE")
+                                    {
+                                        locomotivenum = Convert.ToInt32(storeline[2]);
+                                        table = "LOCOMOTIVE";
+
+                                    }
+                                }
+
+
+
+                                else if (storeline[0] == "T")
+                                {
+                                    //label4.Text += " " + storeline[1] + " " + storeline[2];
+
                                 }
                                 else
                                 {
-                                    //trainconnect.Insert();
+                                    for (int i = 0; i < storeline.Length; i++)
+                                    {
+                                        if (storeline[i] != "")
+                                        {
+                                            //trainconnect.Insert("")
+                                        }
+                                        else
+                                        {
+                                            // Do Nothing
+                                        }
+
+                                    }
                                 }
-                                ++i;
                             }
-                            
+
+                            else
+                            {
+
+                            }
+
+                            ++j;
 
                         } while (line != null);
                     }
@@ -296,6 +378,11 @@ namespace Train_UI
         {
             Form3 thirdForm = new Form3();
             thirdForm.Show();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
