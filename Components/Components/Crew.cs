@@ -13,6 +13,17 @@ namespace Components
         private Hub originHub;  //which hub they start from and return to
         private bool timeUp;  //is their shift over?
         private DateTime elapsedTime;  //how much time has passed on their shift?
+        private static double averageCrewTime;  //average shift time among all crews
+        private static double totalCrewTimeWorked;  //total crew time worked in a day
+
+        //public void ComputeAvgTime()
+        //{
+        //    int numCrews;
+
+        //    totalCrewTimeWorked += elapsedTime.Hour;
+
+        //    averageCrewTime = totalCrewTimeWorked / numberOfCrews;
+        //}
 
         //Description: Constructor method
         //Pre-Condition: None
@@ -21,6 +32,7 @@ namespace Components
         {
             this.originHub = originHub;
             timeUp = false;
+            elapsedTime = new DateTime(0, 0, 0, 0, 0, 0);
         }
 
         //Description: Manually update the crew's worked time

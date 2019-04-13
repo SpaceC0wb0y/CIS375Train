@@ -44,8 +44,7 @@ namespace Components
         //Post-Condition: 
         public bool Enter()
         {
-            //there will be more code when adding in the max trains
-            //additional feature here
+
 
             numTrainsVisited++;
             numTrainsParked++;
@@ -115,26 +114,21 @@ namespace Components
             IsHub = false;
         }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
-        public int Resupply(int amount)
-        {
-            return amount;
-        }
 
-        //Description:
-        //Pre-Condition:
-        //Post-Condition:
+        //Description: Train calls this to unload cargo
+        //Pre-Condition: None
+        //Post-Condition: Amount delivered field will be updated
         public void UnloadCargo(int amount)
         {
             amountDelivered += amount;
         }
 
-        //This is to test polymorphic references, not an actual piece of functionality
-        public void Print()
+        //Description: Gets the amount of cargo delivered to a station
+        //Pre-Condition: None
+        //Post-Condition: Returns amount delivered field
+        public int GetAmountDelivered()
         {
-            ;
+            return amountDelivered;
         }
     }
 
