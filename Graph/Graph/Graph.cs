@@ -120,6 +120,13 @@ namespace Graph
                         //Console.WriteLine("The Shortest Edge for " + currentVertex.GetID() + " and " + items.GetVertex().GetID() + " is " + items.GetIncidentEdges()[edgeNum].GetID());
                     }
 
+                    // Tell the user if a route cannot be found between the two verticies i.e. shortestEdge does not change
+                    if (shortestEdge == 1000000)
+                    {
+                        Console.WriteLine("CRITICAL ERROR!: NO EDGES FOUND ROUTE IMPOSSIBLE");
+                        return;
+                    } 
+
                     distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance + shortestEdge;
                     //items.GetIncidentEdges()[0].GetWeight(); 
                     //if the calculated distance of a vertex is less than the kneow distance, update the shortest distance
