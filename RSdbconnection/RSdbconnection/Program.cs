@@ -85,10 +85,14 @@ namespace RSdbconnection
           }
 
           //Insert statement
-          //Pre: Must pass an insert query through this function with appropriate syntax based on mySQL
+          //Pre: Must pass comma seperated database variables, and also corresponding comma seperated databaseValues
           //Post: Inserts a new record into the database
-          public void Insert(string query)
+          //Example of Usage: Insert("track", "track_id, coming_from, going_to", "EDGE1, STATION1, STATION2");
+          public void Insert(string tableName, string DBvariables, string DBvalues)
           {
+               DBvalues = "'" + DBvalues.Replace(",", "','") + "'";
+               string query = "Insert INTO " + tableName + "(" + DBvariables + ")" + " VALUES(" + DBvalues + ");";
+               Console.Write(query);
                //open connection
                if (this.OpenConnection() == true)
                {
