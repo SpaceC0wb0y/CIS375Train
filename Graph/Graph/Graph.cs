@@ -26,6 +26,8 @@ namespace Graph
     //relating to all adjacent vertices and the edges that connect them.
 
     /***************GRAPH NOT FULLY TESTED*************/
+
+
     public class Graph
     {
         //dictonary that stores each vertex's adjacency list
@@ -34,6 +36,8 @@ namespace Graph
         private List<Vertex> vertices;
         //list of all edges currently in graph
         private List<Edge> edges;
+        //list of all trains currently in graph
+        private List<Train> trains;
 
         //Description: Constructor method for Graph class
         //Pre-Condition: None
@@ -44,6 +48,7 @@ namespace Graph
             adjacencyList = new Dictionary<Vertex, LinkedList<Node>>();
             vertices = new List<Vertex>();
             edges = new List<Edge>();
+            trains = new List<Train>();
         }
 
         //////////////////////////////////////Justin's Algrithm In Tas's Code/////////////////////////////////////////////////////////////////
@@ -56,11 +61,37 @@ namespace Graph
             public Vertex vertex;
             public int shortestDistance;
             public Vertex previousVertex;
-            
 
         }
 
+       
 
+        public bool AddTrain(Train V)
+        {
+            //checks if vertex is already in list of trains (no duplicates allowed)
+            if (trains.Contains(V))
+            {
+                return false;  //fail
+            }
+            //train is original, will add to list of trains
+            else
+            {
+                trains.Add(V);
+                return true;  //success
+            }
+        }
+
+        public void showTrains()
+        {
+            foreach (Train t in trains)
+            {
+                Console.WriteLine(t.GetID());
+            }
+        }
+
+        //Description: Traverses the adjacency list produced in map generation to find the shortest path from two verticies
+        //Pre-Condition: Both Verticies exist on the map, and there is at least one edge between them
+        //Post-Condition: The shortest path is displayed between two verticies, as well as the distance of the path
         public void DijkstrasAlg(Graph graph, Vertex source, Vertex dest)
         {
             int infinity = 1000000;
@@ -69,7 +100,7 @@ namespace Graph
             List<Vertex> visitedNodes = new List<Vertex>();
             var currentVertex = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
-            int distance;           
+            int distance;
 
         List<ShortestPath> shortestPaths = new List<ShortestPath>();
           
@@ -81,7 +112,7 @@ namespace Graph
                     {
                         vertex = currentVertex,
                         shortestDistance = 0,
-                        previousVertex = null
+                        previousVertex = null,
                     });
                 }
                 else
@@ -121,7 +152,7 @@ namespace Graph
                     }
 
                     // Tell the user if a route cannot be found between the two verticies i.e. shortestEdge does not change
-                    if (shortestEdge == 1000000)
+                    if (shortestEdge >= 1000000)
                     {
                         Console.WriteLine("CRITICAL ERROR!: NO EDGES FOUND ROUTE IMPOSSIBLE");
                         return;
@@ -129,7 +160,7 @@ namespace Graph
 
                     distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance + shortestEdge;
                     //items.GetIncidentEdges()[0].GetWeight(); 
-                    //if the calculated distance of a vertex is less than the kneow distance, update the shortest distance
+                    //if the calculated distance of a vertex is less than the known distance, update the shortest distance
                     if (shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance > distance)
                     {
                         //update the previous vertex for each of the updated distances
@@ -167,6 +198,7 @@ namespace Graph
 
             foreach (Vertex v in sp)
             {
+                
                 Console.WriteLine(v.GetID());
             }
 
@@ -626,6 +658,42 @@ namespace Graph
         //Description: Method to replace object name when it is used as a string
         //Pre-Condition: None
         //Post-Condition: String to be used when object reference name is used in an output statement
+        public override string ToString()
+        {
+            return "Vertex Name: " + ID;
+        }
+    }
+
+    public class Train
+    {
+        int totalDistance;
+        Vertex currentVertex;
+        Vertex nextVertex;
+        string trainType;   // train types include "cargo" and "freight"
+        string currentStatus; // status types include "running", "finished", "waiting", "down", "initial"
+        string ID;
+        List<Vertex> path;
+
+        public Train(string name, string type, List<Vertex> route)
+        {
+            ID = name;
+            trainType = type;
+            totalDistance = 0;
+            currentStatus = "initial";
+
+            path = new List<Vertex>(route);
+            currentVertex = path.First();
+            nextVertex = path.ElementAt(1);
+
+
+        }
+
+        public string GetID()
+        {
+            return ID;
+        }
+
+
         public override string ToString()
         {
             return "Vertex Name: " + ID;

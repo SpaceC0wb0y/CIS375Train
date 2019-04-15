@@ -27,6 +27,10 @@ namespace Graph
             Edge E9 = new Edge("Shorter path from B to C", B, C, 4);
             Edge E10 = new Edge("Shorter path from A to B", A, B, 5);
 
+            List<Vertex> PathAB = new List<Vertex> { A, B, C };
+
+            Train AB = new Train("Train AB", "Freight", PathAB);
+
             ////////////////justin
 
 
@@ -58,6 +62,8 @@ namespace Graph
             test.AddVertex(C);
             test.AddVertex(D);
             test.AddVertex(E);
+
+            
             //List<Vertex> vertices = test.GetVertices();
 
             //foreach (var item in vertices)
@@ -219,10 +225,13 @@ namespace Graph
 
 
 
-            test.DijkstrasAlg(test, B, A);
+            test.DijkstrasAlg(test, A, E);
+
 
 
             Console.Write("");
+            
+
 
             test.DijkstrasAlg(test, C, E);
 
