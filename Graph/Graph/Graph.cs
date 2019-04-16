@@ -81,7 +81,19 @@ namespace Graph
             }
         }
 
-        public void showTrains()
+        public void RunRoute (Graph graph, Train tran)
+        {
+            TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran);
+
+            if (tran.GetCurrentStatus() == "initial")
+                tran.SetCurrentStatus("running");
+
+            tran.SetCurrentStation(tran.GetNextVertex());
+
+
+        }
+
+        public void ShowTrains()
         {
             foreach (Train t in trains)
             {
@@ -92,7 +104,7 @@ namespace Graph
         //Description: Traverses the adjacency list produced in map generation to find the shortest path from two verticies
         //Pre-Condition: Both Verticies exist on the map, and there is at least one edge between them
         //Post-Condition: The shortest path is displayed between two verticies, as well as the distance of the path
-        public void DijkstrasAlg(Graph graph, Vertex source, Vertex dest)
+        public void TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran)
         {
             int infinity = 1000000;
             List<Vertex> unvisitedNodes = new List<Vertex>();
@@ -195,6 +207,17 @@ namespace Graph
             sp.Add(source);
 
             sp.Reverse();
+
+            // set the path of the train when first running the algorithm, assumed every subsequent call is for moving the train object
+            if (tran.GetPath().Count == 0)
+            {
+                tran.SetPath(sp);
+
+                tran.SetCurrentVertex(tran.GetPath().First());
+                tran.SetCurrentStation(tran.GetPath().First());
+                tran.SetNextVertex(tran.GetPath().ElementAt(1));
+                tran.SetHomeHub(tran.GetPath().First());
+            }
 
             foreach (Vertex v in sp)
             {
@@ -669,23 +692,74 @@ namespace Graph
         int totalDistance;
         Vertex currentVertex;
         Vertex nextVertex;
+        Vertex homeHub;
+        Vertex currentStation;
         string trainType;   // train types include "cargo" and "freight"
         string currentStatus; // status types include "running", "finished", "waiting", "down", "initial"
         string ID;
-        List<Vertex> path;
+        List<Vertex> path = new List<Vertex>();
 
-        public Train(string name, string type, List<Vertex> route)
+        public Train(string name, string type)
         {
             ID = name;
             trainType = type;
             totalDistance = 0;
             currentStatus = "initial";
+        }
 
-            path = new List<Vertex>(route);
-            currentVertex = path.First();
-            nextVertex = path.ElementAt(1);
+        public Vertex GetHomeHub()
+        {
+            return homeHub;
+        }
 
+        public void SetHomeHub(Vertex vert)
+        {
+            this.homeHub = vert;
+        }
 
+        public Vertex GetCurrentStation()
+        {
+            return currentStation;
+        }
+
+        public void SetCurrentStation(Vertex vert)
+        {
+            this.currentStation = vert;
+        }
+
+        public string GetCurrentStatus()
+        {
+            return currentStatus;
+        }
+
+        public void SetCurrentStatus(string newStatus)
+        {
+            this.currentStatus = newStatus;
+        }
+
+        public Vertex GetNextVertex()
+        {
+            return nextVertex;
+        }
+
+        public void SetNextVertex(Vertex vert)
+        {
+            this.nextVertex = vert;
+        }
+
+        public Vertex GetCurrentVertex()
+        {
+            return currentVertex;
+        }
+
+        public void SetCurrentVertex(Vertex vert)
+        {
+            this.currentVertex = vert;
+        }
+
+        public int GetTotalDistance()
+        {
+            return totalDistance;
         }
 
         public string GetID()
@@ -697,6 +771,16 @@ namespace Graph
         public override string ToString()
         {
             return "Vertex Name: " + ID;
+        }
+
+        public void SetPath(List<Vertex> tPath)
+        {
+            this.path = tPath;
+        }
+
+        public List<Vertex> GetPath()
+        {
+            return path;
         }
     }
 

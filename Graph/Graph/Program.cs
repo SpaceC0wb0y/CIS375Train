@@ -27,12 +27,9 @@ namespace Graph
             Edge E9 = new Edge("Shorter path from B to C", B, C, 4);
             Edge E10 = new Edge("Shorter path from A to B", A, B, 5);
 
-            List<Vertex> PathAB = new List<Vertex> { A, B, C };
-
-            Train AB = new Train("Train AB", "Freight", PathAB);
-
             ////////////////justin
-
+            Train Trainboi = new Train("Trainboi", "Freight");
+            //Train Trainboi2 = new Train("Trainboi2", "Freight");
 
             ///////////////justin
 
@@ -225,7 +222,7 @@ namespace Graph
 
 
 
-            test.DijkstrasAlg(test, A, E);
+            test.TrainRoute(test, A, E, Trainboi);
 
 
 
@@ -233,7 +230,7 @@ namespace Graph
             
 
 
-            test.DijkstrasAlg(test, C, E);
+         //   test.TrainRoute(test, C, E, Trainboi2);
 
             Console.ReadLine();
 
