@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
 
+
 namespace Train_UI
 {
     
@@ -20,12 +21,6 @@ namespace Train_UI
         public Form1()
         {
             InitializeComponent();
-            
-            
-            
-            
-            
-
 
         }
 
@@ -108,7 +103,7 @@ namespace Train_UI
                                     telaBuilder[0] = '0';
                                     string hold = telaBuilder.ToString();
                                     seqnum = Convert.ToInt32(hold);
-                                    
+
                                     for (int i = 1; i < storeline.Length; i++)
                                     {
                                         if (storeline[i] != "")
@@ -134,7 +129,7 @@ namespace Train_UI
                                     if (storeline[1] != "" && storeline[1] == "HUB")
                                     {
                                         hubnum = Convert.ToInt32(storeline[2]);
-                                        table = "HUB";
+                                        table = "hub";
                                         //label3.Text = table;
 
                                     }
@@ -142,7 +137,7 @@ namespace Train_UI
                                     else if (storeline[1] != "" && storeline[1] == "STATION")
                                     {
                                         stationnum = Convert.ToInt32(storeline[2]);
-                                        table = "STATION";
+                                        table = "station";
 
                                     }
                                     else if (storeline[1] != "" && storeline[1] == "EDGE")
@@ -154,7 +149,7 @@ namespace Train_UI
                                     else if (storeline[1] != "" && storeline[1] == "LOCOMOTIVE")
                                     {
                                         locomotivenum = Convert.ToInt32(storeline[2]);
-                                        table = "LOCOMOTIVE";
+                                        table = "train";
 
                                     }
                                 }
@@ -168,20 +163,41 @@ namespace Train_UI
                                 }
                                 else
                                 {
-                                    for (int i = 0; i < storeline.Length; i++)
+
+
+                                    if (table == "hub")
                                     {
-                                        if (storeline[i] != "")
-                                        {
-                                            //trainconnect.Insert("")
-                                        }
-                                        else
-                                        {
-                                            // Do Nothing
-                                        }
+                                        //trainconnect.Insert("")
+                                        //trainconnect.Insert("INSERT into " + table + "(hub_id) VALUES(\"" + storeline[0] + "\")");
+                                        trainconnect.Insert(table,"hub_id",storeline[0]);
+                                    }
+                                    else if (table == "station")
+                                    {
+
+                                        int rangeon = Convert.ToInt32(storeline[4]) - Convert.ToInt32(storeline[3]);
+                                        int rangeoff = Convert.ToInt32(storeline[6]) - Convert.ToInt32(storeline[5]);
+                                        string ron = Convert.ToString(rangeon);
+                                        string roff = Convert.ToString(rangeoff);
+                                        //trainconnect.Insert("INSERT into " + table + "(station_id,station_type,range_on,range_off,ticket_price) VALUES(\"" + storeline[0] + "\" , \"" + storeline[1] + "\" , \"" + ron + "\" , \"" + roff + "\" , \"" + storeline[7] + "\")");
+                                        
+                                        string send = storeline[0] + "," + storeline[1] + "," + ron + "," + roff + "," + storeline[7];
+                                        trainconnect.Insert(table, "station_id,station_type,range_on,range_off,ticket_price", send);
+                                    }
+
+                                    else if (table == "train")
+                                    {
 
                                     }
+                                    else
+                                    {
+                                        // DO NOTHING
+                                    }
+
                                 }
                             }
+
+
+
 
                             else
                             {
@@ -229,7 +245,7 @@ namespace Train_UI
                                 }
                                 else
                                 {
-                                    //trainconnect.Insert();
+                                    
                                 }
                                 ++i;
                             }
