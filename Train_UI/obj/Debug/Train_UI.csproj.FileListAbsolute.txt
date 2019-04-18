@@ -29,3 +29,13 @@ C:\Users\jemacfad\Desktop\TrainUI\Train_UI\obj\Debug\Train_UI.csproj.CoreCompile
 C:\Users\jemacfad\Desktop\TrainUI\Train_UI\obj\Debug\Train_UI.csproj.CopyComplete
 C:\Users\jemacfad\Desktop\TrainUI\Train_UI\obj\Debug\Train_UI.exe
 C:\Users\jemacfad\Desktop\TrainUI\Train_UI\obj\Debug\Train_UI.pdb
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csprojAssemblyReference.cache
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Form1.resources
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Form2.resources
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Form3.resources
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Form4.resources
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Properties.Resources.resources
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csproj.GenerateResource.cache
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csproj.CoreCompileInputs.cache
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.exe
+C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.pdb

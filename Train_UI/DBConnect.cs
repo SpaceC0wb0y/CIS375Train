@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
 
-
-namespace Train_UI
+namespace RSdbconnection
 {
     class DBConnect
     {
@@ -86,10 +85,14 @@ namespace Train_UI
         }
 
         //Insert statement
-        //Pre: Must pass an insert query through this function with appropriate syntax based on mySQL
+        //Pre: Must pass comma seperated database variables, and also corresponding comma seperated databaseValues
         //Post: Inserts a new record into the database
-        public void Insert(string query)
+        //Example of Usage: Insert("track", "track_id, coming_from, going_to", "EDGE1, STATION1, STATION2");
+        public void Insert(string tableName, string DBvariables, string DBvalues)
         {
+            DBvalues = "'" + DBvalues.Replace(",", "','") + "'";
+            string query = "Insert INTO " + tableName + "(" + DBvariables + ")" + " VALUES(" + DBvalues + ");";
+            Console.Write(query);
             //open connection
             if (this.OpenConnection() == true)
             {
@@ -184,7 +187,26 @@ namespace Train_UI
                 return queryStorage; //Empty (most likely)
             }
         }
+        public MySqlDataReader SelectDataReader(string query)
+        {
+            //Create Command
+            if (this.OpenConnection() == true)
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
 
+                return dataReader;
+            }
+            else
+            {
+                query = "";
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+                return dataReader;
+            }
+        }
     }
 
 }
