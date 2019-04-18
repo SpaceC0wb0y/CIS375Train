@@ -187,7 +187,26 @@ namespace RSdbconnection
                     return queryStorage; //Empty (most likely)
                }
           }
+          public MySqlDataReader SelectDataReader(string query)
+          {
+               //Create Command
+               if (this.OpenConnection() == true)
+               {
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
 
+                    return dataReader;
+               }
+               else
+               {
+                    query = "";
+                    MySqlCommand cmd = new MySqlCommand(query, connection);
+                    //Create a data reader and Execute the command
+                    MySqlDataReader dataReader = cmd.ExecuteReader();
+                    return dataReader;
+               }
+          }
      }
 
 }
