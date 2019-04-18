@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Route;
 
 /*
    Description: This Graph class found below will be used to generate the railway map that the program
@@ -64,40 +65,18 @@ namespace Graph
 
         }
 
-       
-
-        public bool AddTrain(Train V)
+         public bool AddTrain(Train T)
         {
             //checks if vertex is already in list of trains (no duplicates allowed)
-            if (trains.Contains(V))
+            if (trains.Contains(T))
             {
                 return false;  //fail
             }
             //train is original, will add to list of trains
             else
             {
-                trains.Add(V);
+                trains.Add(T);
                 return true;  //success
-            }
-        }
-
-        public void RunRoute (Graph graph, Train tran)
-        {
-            TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran);
-
-            if (tran.GetCurrentStatus() == "initial")
-                tran.SetCurrentStatus("running");
-
-            tran.SetCurrentStation(tran.GetNextVertex());
-
-
-        }
-
-        public void ShowTrains()
-        {
-            foreach (Train t in trains)
-            {
-                Console.WriteLine(t.GetID());
             }
         }
 
@@ -209,6 +188,7 @@ namespace Graph
             sp.Reverse();
 
             // set the path of the train when first running the algorithm, assumed every subsequent call is for moving the train object
+            // !!!!!!!!TEST!!!!!!!!!!!
             if (tran.GetPath().Count == 0)
             {
                 tran.SetPath(sp);
@@ -219,11 +199,11 @@ namespace Graph
                 tran.SetHomeHub(tran.GetPath().First());
             }
 
-            foreach (Vertex v in sp)
-            {
+            //foreach (Vertex v in sp)
+            //{
                 
-                Console.WriteLine(v.GetID());
-            }
+              //  Console.WriteLine(v.GetID());
+            //}
 
             //reset info for next run
         }
@@ -689,79 +669,73 @@ namespace Graph
 
     public class Train
     {
-        int totalDistance;
-        Vertex currentVertex;
-        Vertex nextVertex;
-        Vertex homeHub;
-        Vertex currentStation;
-        string trainType;   // train types include "cargo" and "freight"
-        string currentStatus; // status types include "running", "finished", "waiting", "down", "initial"
-        string ID;
-        List<Vertex> path = new List<Vertex>();
+       public int index;
+       private int totalDistance;
+       private Vertex currentVertex;
+       private Vertex nextVertex;
+       private Vertex homeHub;
+       private Vertex currentStation;
+       private string trainType;   // train types include "cargo" and "freight"
+       private string currentStatus; // status types include "running", "finished", "waiting", "down", "initial"
+       private string ID;
+       public List<Vertex> path = new List<Vertex>();
+        public Graph currentGraph;
+        
 
-        public Train(string name, string type)
+        public Train(string name, string type, Graph currentGraph)
         {
             ID = name;
+            index = 0;
             trainType = type;
             totalDistance = 0;
             currentStatus = "initial";
+            this.currentGraph = currentGraph;
         }
 
         public Vertex GetHomeHub()
         {
             return homeHub;
         }
-
         public void SetHomeHub(Vertex vert)
         {
             this.homeHub = vert;
         }
-
         public Vertex GetCurrentStation()
         {
             return currentStation;
         }
-
         public void SetCurrentStation(Vertex vert)
         {
             this.currentStation = vert;
         }
-
         public string GetCurrentStatus()
         {
             return currentStatus;
         }
-
         public void SetCurrentStatus(string newStatus)
         {
             this.currentStatus = newStatus;
         }
-
         public Vertex GetNextVertex()
         {
             return nextVertex;
         }
-
         public void SetNextVertex(Vertex vert)
         {
             this.nextVertex = vert;
         }
-
         public Vertex GetCurrentVertex()
         {
             return currentVertex;
         }
-
         public void SetCurrentVertex(Vertex vert)
         {
             this.currentVertex = vert;
         }
-
         public int GetTotalDistance()
         {
             return totalDistance;
         }
-
         public string GetID()
         {
             return ID;
@@ -782,6 +756,27 @@ namespace Graph
         {
             return path;
         }
+
+       
+
+        public void RunRoute (Graph graph, Train tran)
+        {
+            currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran);
+
+            if (tran.GetCurrentStatus() == "initial")
+                tran.SetCurrentStatus("running");
+
+            // warp train to the station 
+            tran.SetCurrentStation(tran.path[index + 1]);
+            // set the current vertex to the next vertex over for the next run
+            tran.SetCurrentVertex(tran.path[index + 1]);
+            // set the next vertex to two over from the list for the next run  
+            tran.SetNextVertex(tran.path[index + 2]);
+
+            index += 1;
+
+        }
+
     }
 
     //Description: Temporary edge class that theorietically represents a train track.
