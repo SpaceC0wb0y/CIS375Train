@@ -7,7 +7,6 @@ using Graph;
 
 namespace Route
 {
-
     public class FreightRoute 
     {
         public bool IsRepeatable { get; set; }
