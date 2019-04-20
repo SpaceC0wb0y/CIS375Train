@@ -15,13 +15,23 @@ namespace Components
         public bool IsFreightStation { get; set; }
         public bool IsPassengerStation { get; set; }
         public bool IsHub { get; set; }
+
+        //CHECK THIS
+        protected string ID;
+
+        //Description: Gets the ID for a station
+        //Pre-Condition: None
+        //Post-Condition: Returns station ID field
+        public string GetID()
+        {
+            return ID;
+        }
     }
 
     //Description: This is the base class for both passenger and freight stations
     //that holds common data and methods between the two
     public class Station : Vertex
     {
-        protected string stationID;
         protected int numTrainsVisited; 
         protected int numTrainsParked;  //number of trains docked at a station
         protected int ticketPrice;  //fixed ticket price for a station
@@ -30,13 +40,6 @@ namespace Components
         protected int minOff; //minimum number of people getting off a train
         protected int maxOff; //maximum number of people getting off a train
 
-        //Description: Gets the ID for a station
-        //Pre-Condition: None
-        //Post-Condition: Returns station ID field
-        public string GetID()
-        {
-            return stationID;
-        }
 
         //Description: This allows a train to signal that it is entering a station
         //Pre-Condition: None
@@ -101,12 +104,11 @@ namespace Components
         //Description: Constructor method
         //Pre-Condition: None
         //Post-Condition: Creates and intializes a new object
-        public FreightStation(string stationID, int maxTrains, int ticketCost)
+        public FreightStation(string stationID)
         {
-            this.stationID = stationID;
+            this.ID = stationID;
             numTrainsVisited = 0;
             amountDelivered = 0;
-            ticketPrice = ticketCost;
             IsFreightStation = true;
             IsPassengerStation = false;
             IsHub = false;
@@ -139,9 +141,9 @@ namespace Components
         //Description: Constructor method
         //Pre-Condition:
         //Post-Condition: Creates a new object and initializes fields
-        public PassengerStation(string stationID, int maxTrains, int ticketCost, int minOn, int maxOn, int minOff, int maxOff)
+        public PassengerStation(string stationID, int ticketCost, int minOn, int maxOn, int minOff, int maxOff)
         {
-            this.stationID = stationID;
+            this.ID = stationID;
             totalPeopleVisited = 0;
             numTrainsVisited = 0;
             ticketPrice = ticketCost;
@@ -206,7 +208,6 @@ namespace Components
     //day/shift respectively and return to at the end of the day/shift
     public class Hub : Vertex
     {
-        private string hubID;  
         private int numTimesUsed;  
 
         //Description: Constructor method
@@ -214,19 +215,11 @@ namespace Components
         //Post-Condition: Creates new hub object
         public Hub(string hubID)
         {
-            this.hubID = hubID;
+            this.ID = hubID;
             numTimesUsed = 0;
             IsFreightStation = false;
             IsPassengerStation = false;
             IsHub = true;
-        }
-
-        //Description: Gets the hub ID
-        //Pre-Condition: None
-        //Post-Condition: Returns hubID
-        public string GetID()
-        {
-            return hubID;
         }
 
         //Description: Gets the number of times hub is used

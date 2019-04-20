@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Components;
 
 namespace Graph
 {
@@ -204,33 +205,33 @@ namespace Graph
             //        item.PrintContents();
             //    }
 
-            
 
-            Vertex V1 = new Vertex("Vertex1");
-            Vertex V2 = new Vertex("Vertex2");
-            Graph graph = new Graph();
-            graph.AddVertex(V1);
+            /*******THIS IS FROM OUR MEETING**********/
+            //Vertex V1 = new Vertex("Vertex1");
+            //Vertex V2 = new Vertex("Vertex2");
+            //Graph graph = new Graph();
+            //graph.AddVertex(V1);
 
-            Edge E1 = new Edge("edge1", V1, V2, 30);
-            graph.AddEdge(E1);
+            //Edge E1 = new Edge("edge1", V1, V2, 30);
+            //graph.AddEdge(E1);
 
-            try
-            {
-                graph.FindVertex("Vertex5");
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
+            //try
+            //{
+            //    graph.FindVertex("Vertex5");
+            //}
+            //catch(Exception e)
+            //{
+            //    Console.WriteLine(e.Message);
+            //}
 
-            //graph.RemoveVertex(V1);
-            //graph.RemoveEdge(E1);
+            ////graph.RemoveVertex(V1);
+            ////graph.RemoveEdge(E1);
 
-            LinkedList<Node> exampleList = graph.GetList(V1);
-            foreach (var item in exampleList)
-            {
-                List<Edge> testList = item.GetIncidentEdges();
-            }
+            //LinkedList<Node> exampleList = graph.GetList(V1);
+            //foreach (var item in exampleList)
+            //{
+            //    List<Edge> testList = item.GetIncidentEdges();
+            //}
         }
     }
 }
