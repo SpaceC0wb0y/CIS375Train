@@ -39,7 +39,7 @@ namespace Train_UI
         }
 
         //open connection to database
-        private bool OpenConnection()
+        public bool OpenConnection()
         {
             try
             {
@@ -70,7 +70,7 @@ namespace Train_UI
         }
 
         //Close connection
-        private bool CloseConnection()
+        public bool CloseConnection()
         {
             try
             {
@@ -195,7 +195,8 @@ namespace Train_UI
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
-
+                
+                
                 return dataReader;
             }
             else
@@ -204,8 +205,11 @@ namespace Train_UI
                 MySqlCommand cmd = new MySqlCommand(query, connection);
                 //Create a data reader and Execute the command
                 MySqlDataReader dataReader = cmd.ExecuteReader();
+                
                 return dataReader;
+
             }
+            
         }
     }
 

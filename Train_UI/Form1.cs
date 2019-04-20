@@ -28,7 +28,7 @@ namespace Train_UI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -705,7 +705,7 @@ namespace Train_UI
                                     {
                                         string day = Convert.ToString(daynum);
                                         string send = day + "," + route_id_iterator.ToString() + "," + storeline[0] + "," + storeline[1];
-                                        trainconnect.Insert(table, "day_num,route_id,station,start_time", send);
+                                        trainconnect.Insert(table, "day,route_id,station,start_time", send);
                                     }
 
 
@@ -752,6 +752,19 @@ namespace Train_UI
             
             trainconnect.Delete("DELETE from tracks");
             
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            Form4 fourthForm = new Form4();
+            fourthForm.Show();
+
+        }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            Form5 fiveForm = new Form5();
+            fiveForm.Show();
         }
     }
 }
