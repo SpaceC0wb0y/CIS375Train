@@ -83,7 +83,7 @@ namespace Graph
         //Description: Traverses the adjacency list produced in map generation to find the shortest path from two verticies
         //Pre-Condition: Both Verticies exist on the map, and there is at least one edge between them
         //Post-Condition: The shortest path is displayed between two verticies, as well as the distance of the path
-        public void TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran)
+        public List<Vertex> TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran, out int distance)
         {
             int infinity = 1000000;
             List<Vertex> unvisitedNodes = new List<Vertex>();
@@ -91,7 +91,7 @@ namespace Graph
             List<Vertex> visitedNodes = new List<Vertex>();
             var currentVertex = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
-            int distance;
+            distance = 1000000;
 
         List<ShortestPath> shortestPaths = new List<ShortestPath>();
           
@@ -146,7 +146,7 @@ namespace Graph
                     if (shortestEdge >= 1000000)
                     {
                         Console.WriteLine("CRITICAL ERROR!: NO EDGES FOUND ROUTE IMPOSSIBLE");
-                        return;
+                        
                     } 
 
                     distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance + shortestEdge;
@@ -187,17 +187,20 @@ namespace Graph
 
             sp.Reverse();
 
+
+            return sp;
+
             // set the path of the train when first running the algorithm, assumed every subsequent call is for moving the train object
             // !!!!!!!!TEST!!!!!!!!!!!
-            if (tran.GetPath().Count == 0)
-            {
-                tran.SetPath(sp);
+            //if (tran.GetPath().Count == 0)
+            //{
+            //    tran.SetPath(sp);
 
-                tran.SetCurrentVertex(tran.GetPath().First());
-                tran.SetCurrentStation(tran.GetPath().First());
-                tran.SetNextVertex(tran.GetPath().ElementAt(1));
-                tran.SetHomeHub(tran.GetPath().First());
-            }
+            //    tran.SetCurrentVertex(tran.GetPath().First());
+            //    tran.SetCurrentStation(tran.GetPath().First());
+            //   tran.SetNextVertex(tran.GetPath().ElementAt(1));
+            //    tran.SetHomeHub(tran.GetPath().First());
+            //}
 
             //foreach (Vertex v in sp)
             //{
@@ -673,20 +676,43 @@ namespace Graph
        private int totalDistance;
        private Vertex currentVertex;
        private Vertex nextVertex;
-       private Vertex homeHub;
        private Vertex currentStation;
-       private string trainType;   // train types include "cargo" and "freight"
-       private string currentStatus; // status types include "running", "finished", "waiting", "down", "initial"
+       private string currentStatus; // status types include "running", "finished", "waiting", "down", "initial", "completed"
        private string ID;
-       public List<Vertex> path = new List<Vertex>();
         public Graph currentGraph;
+
+         private Vertex homeHub; 
+
+        /// For when passenger and freight trains get split these methods go to the subclass
+        // FREIGHT TRAIN VARABLES
+        
+    
+        private int totalDistanceFromClosestHUBToRouteSourceStation;
+        private IList<Vertex> ClosestPathToTheHUB = new List<Vertex>();
+        private List<Vertex> TheRoute = new List<Vertex>();
+        private List<Vertex> TheRouteBackHome = new List<Vertex>();
+
+
+
+        // PASSENGER TRAIN VARIABLES
+        private IList<Vertex> RouteWithHomeHub = new List<Vertex>();
+
+        private IList<Vertex> RouteWithoutHomeHub = new List<Vertex>();
+        
+        
+        // GETTERS AND SETTERS FOR FREIGHT TRAIN
+
+        
+
+        // GETTERS AND SETTERS FOR FREIGHT TRAIN
+
+        
         
 
         public Train(string name, string type, Graph currentGraph)
         {
             ID = name;
             index = 0;
-            trainType = type;
             totalDistance = 0;
             currentStatus = "initial";
             this.currentGraph = currentGraph;
@@ -746,37 +772,209 @@ namespace Graph
         {
             return "Vertex Name: " + ID;
         }
-
-        public void SetPath(List<Vertex> tPath)
+        public List<Vertex> GetTheRoute()
         {
-            this.path = tPath;
-        }
-
-        public List<Vertex> GetPath()
-        {
-            return path;
+            return TheRoute;
         }
 
        
 
-        public void RunRoute (Graph graph, Train tran)
+        public void RunRouteFT (Graph graph, Train tran)
         {
-            currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran);
+            currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran, out int distance);       
 
             if (tran.GetCurrentStatus() == "initial")
                 tran.SetCurrentStatus("running");
 
-            // warp train to the station 
-            tran.SetCurrentStation(tran.path[index + 1]);
-            // set the current vertex to the next vertex over for the next run
-            tran.SetCurrentVertex(tran.path[index + 1]);
-            // set the next vertex to two over from the list for the next run  
-            tran.SetNextVertex(tran.path[index + 2]);
+            if (tran.currentStatus != "finished" || tran.currentStatus != "down" || tran.currentStatus != "completed")
+            {
+                if (tran.nextVertex == tran.TheRoute.Last())
+                {
+                    tran.SetCurrentStatus("completed");
+
+                    tran.SetCurrentStation(tran.TheRoute[index + 1]);
+                    tran.SetCurrentVertex(tran.TheRoute[index + 1]);
+                    tran.SetNextVertex(tran.TheRouteBackHome[0]);
+
+                } 
+                else 
+                {
+                    // warp train to the station 
+                    tran.SetCurrentStation(tran.TheRoute[index + 1]);
+                    // set the current vertex to the next vertex over for the next run
+                    tran.SetCurrentVertex(tran.TheRoute[index + 1]);
+                    // set the next vertex to two over from the list for the next run  
+                    tran.SetNextVertex(tran.TheRoute[index + 2]);
+
+                    Console.WriteLine("Train Arriving at station " + tran.currentStation);
+            
+                }
+
+            tran.totalDistance += distance;
 
             index += 1;
 
+            } else if (tran.currentStatus == "completed")
+            {   
+                // have return something to let the master know that the train has finished running for the day
+                Console.WriteLine("TRAIN HAS FINSIHED ROUTE");
+                currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran, out distance);
+
+                tran.SetCurrentStation(tran.TheRouteBackHome[index + 1]);
+                tran.SetCurrentVertex(tran.TheRoute[index + 1]);
+                tran.SetNextVertex(tran.TheRouteBackHome[index + 2]);
+
+            }         
+
         }
 
+        // Method that should assign routes to freight trains by cycling through each train until all routes are assigned
+        //MEANT FOR USE IN THE MASTER CONTROL 
+        public void AssignRouteFT (Graph g, IList<Train> FTList, IList<FreightRoute> FTRoute)
+        {
+            //IDictionary<Node, Linklist> graph;
+            IList<Train> FT;                      // FT = Freight Trains
+            IList<FreightRoute> FR;              // FR = Freight Route
+            
+            FT = FTList;
+            FR = FTRoute;
+
+            if (FT.Count > 0 && g != null && FR.Count > 0)
+            {
+
+            foreach(FreightRoute R in FR)
+            {
+                if(FT.Count > 0)
+                {
+                    int totalDistance = 1000000;
+                    
+                    foreach (Train ft in FT)
+                    {
+                        int temp = 1000000;
+                        int routetemp = 100000;
+                        int hometemp = 100000;
+
+                        IList<Vertex> closestPathToHub = g.TrainRoute(g ,ft.currentVertex, R.GetStartStation(), ft, out temp);
+                        if( totalDistance > temp)
+                        {
+                            ft.homeHub = ft.currentVertex;
+				            ft.totalDistanceFromClosestHUBToRouteSourceStation = temp;
+				            ft.ClosestPathToTheHUB = closestPathToHub;
+				            ft.TheRoute = g.TrainRoute(g, R.GetStartStation(), R.GetEndStation(), ft, out routetemp);
+				            ft.TheRouteBackHome = g.TrainRoute(g, R.GetEndStation(), ft.GetHomeHub(), ft, out hometemp);
+                        }
+                    }
+                    R.IsAssigned = true;
+                }
+                else
+                {
+                    R.IsAssigned = false;
+                }
+            }
+            // Once a fT has 2 phases and hase some time remaining to comeplete another ride.
+            // Check
+
+            if (FR.Where(x => x.IsAssigned == false).Count() > 0) // LINQ
+            {
+            	foreach(FreightRoute R in FR.Where(x=> x.IsAssigned == false))
+            	{
+                    foreach (Train ft in FT)
+                    {
+                    int temp = 1000000;
+                    int routetemp = 100000;
+                    int hometemp = 100000;
+
+                        IList<Vertex> closestPathToHub = g.TrainRoute(g, ft.currentVertex, R.GetStartStation(), ft, out temp);
+                        if( totalDistance > temp)
+                        {
+                            ft.homeHub = ft.currentVertex;
+				            ft.totalDistanceFromClosestHUBToRouteSourceStation = temp;
+				            ft.ClosestPathToTheHUB = closestPathToHub;
+				            ft.TheRoute = g.TrainRoute(g, R.GetStartStation(), R.GetEndStation(), ft , out hometemp);
+				            ft.TheRouteBackHome = g.TrainRoute(g,R.GetEndStation(), ft.GetHomeHub(), ft , out routetemp);
+                        }
+                    }
+	            }
+             }
+        }
+        else
+        {
+            Console.WriteLine("ERROR, NO TRAINS");
+        }
+
+    }
+    
+        // Method that should assign routes to passenger trains by cycling through each train until all routes are assigned
+        //MEANT FOR USE IN THE MASTER CONTROL 
+         public void AssignRoutePT (Graph g, IList<Train> PTList, IList<PassengerRoute> PTRoute)
+        {
+            //IDictionary<Node, Linklist> graph;
+            IList<Train> PT;                      // PT = Passenger Trains
+            IList<PassengerRoute> PR;              // PR = Passenger Route
+            
+            PT = PTList;
+            PR = PTRoute;
+        
+
+            if (PT.Count > 0 && g != null && PR.Count > 0)
+            {
+                PR = PR.OrderBy(x => x.arrivalTime).ToList();
+
+            foreach(PassengerRoute R in PR)
+            {
+                if(PT.Count > 0)
+                {          
+                    //int totalDistance = 1000000;
+
+                    if (PR.Where(x => x.IsAssigned == false).Count() > 0) // LINQ
+                    {
+
+                    foreach (Train pt in PT)
+                    {
+
+                        if (pt.RouteWithHomeHub.Count() == 0)
+                        {
+                            pt.homeHub = pt.currentVertex;
+                            pt.RouteWithHomeHub.Add(pt.homeHub);
+                        }
+                        else
+                        {
+                            pt.RouteWithoutHomeHub.Add(R.GetDestinationStation());
+                            pt.RouteWithHomeHub.Add(R.GetDestinationStation());
+                         
+                        }
+
+                    }
+                    }
+                    R.IsAssigned = true;
+                }
+                
+            }
+            
+           foreach(Train pt in PT)
+           {
+               int temp = 1000000;
+               int hometemp = 1000000;
+
+               pt.RouteWithoutHomeHub.Reverse();
+               pt.RouteWithHomeHub.Reverse();
+
+               IList<Vertex> closestPathToHub = g.TrainRoute(g, pt.currentVertex, pt.homeHub, pt, out temp);
+               if (totalDistance > temp)
+               {
+                   pt.totalDistanceFromClosestHUBToRouteSourceStation = temp;
+                   pt.ClosestPathToTheHUB = closestPathToHub;
+                   pt.TheRouteBackHome = g.TrainRoute(g, pt.RouteWithHomeHub.Last(), pt.RouteWithHomeHub.First(), pt, out hometemp);
+
+               }
+           }
+        }
+        else
+        {
+            Console.WriteLine("ERROR, NO TRAINS");
+        }
+
+    }
     }
 
     //Description: Temporary edge class that theorietically represents a train track.

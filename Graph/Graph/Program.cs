@@ -24,7 +24,7 @@ namespace Graph
             Edge E10 = new Edge("Shorter path from A to B", A, B, 5);
 
             ////////////////justin
-            Train Trainboi = new Train("Trainboi", "Freight");
+          //  Train Trainboi = new Train("Trainboi", "Freight");
             //Train Trainboi2 = new Train("Trainboi2", "Freight");
 
             ///////////////justin
@@ -218,17 +218,17 @@ namespace Graph
 
 
 
-            test.TrainRoute(test, A, E, Trainboi);
+           // test.TrainRoute(test, A, E, Trainboi);
 
 
 
-            Console.Write("");
+           // Console.Write("");
             
 
 
          //   test.TrainRoute(test, C, E, Trainboi2);
 
-            Console.ReadLine();
+          //  Console.ReadLine();
 
             //test.RemoveEdge(E4);
             //testList = test.GetList(V2);
