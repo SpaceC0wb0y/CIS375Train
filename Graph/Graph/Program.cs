@@ -204,6 +204,8 @@ namespace Graph
             //        item.PrintContents();
             //    }
 
+            
+
             Vertex V1 = new Vertex("Vertex1");
             Vertex V2 = new Vertex("Vertex2");
             Graph graph = new Graph();
