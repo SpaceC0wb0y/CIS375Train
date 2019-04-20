@@ -503,10 +503,10 @@ namespace Graph
     //Description: Temporary edge class that theorietically represents a train track.
     public class Edge
     {
-        int weight;  //weight of an track
-        string edgeID;  //name/ID of track
-        Vertex source;  //source vertex that track spawns from (one end)
-        Vertex dest;    ////destination vertex that track goes to (one end)
+        private int weight;  //weight of an track
+        private string edgeID;  //name/ID of track
+        private Vertex source;  //source vertex that track spawns from (one end)
+        private Vertex dest;    ////destination vertex that track goes to (one end)
 
         //Description: Edge constructor that intializes the fields of a track
         //Pre-Condition: Both source and destination vertex must exist in graph
