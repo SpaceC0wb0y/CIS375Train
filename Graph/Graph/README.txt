@@ -8,18 +8,18 @@ Graph Class:
 	  private List<Edge> edges;
 
 	  Methods:
-	  public Graph()
-	  public bool AddVertex(Vertex V)
+	  *public Graph()
+	  *public bool AddVertex(Vertex V)
 	  public int NumVertices()
 	   public int NumEdges()
 	  public List<Vertex> GetVertices()
 	  public List<Edge> GetEdges()
-	  public bool AddEdge(Edge E)
-	  public bool RemoveVertex(Vertex V)
-	  public bool RemoveEdge(Edge E)
-	  public LinkedList<Node> GetList(Vertex V)
-	  public Vertex FindVertex(string name)
-	  public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
+	  *public bool AddEdge(Edge E)
+	  *public bool RemoveVertex(Vertex V)
+	  *public bool RemoveEdge(Edge E)
+	  *public LinkedList<Node> GetList(Vertex V)
+	  *public Vertex FindVertex(string name)
+	  *public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
 	  public bool IsAdjacent(Vertex source, Vertex dest)
 
 
