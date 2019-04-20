@@ -64,10 +64,8 @@ namespace Components
              and do what you have to do*/
             Dictionary<Vertex, Node> graph = new Dictionary<Vertex, Node>();
             PassengerStation station1 = new PassengerStation("station1", 4, 5, 5, 10, 5, 10);
-
             graph.Add(station1, new Node(station1));
             Track track1 = new Track();
-
             if (graph[station1].example.IsPassengerStation)
             {
                 PassengerStation passengerStation = (PassengerStation)graph[station1].example;
@@ -77,7 +75,7 @@ namespace Components
             if (graph[station1].example.IsFreightStation)
             {
                 FreightStation freightStation = (FreightStation)graph[station1].example;
-                freightStation.Print();
+                //freightStation.Print();
             }
 
             /*****************END OF MAJOR SECTION******************************/

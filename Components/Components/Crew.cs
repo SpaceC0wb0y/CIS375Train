@@ -13,8 +13,8 @@ namespace Components
         private Hub originHub;  //which hub they start from and return to
         private bool timeUp;  //is their shift over?
         private DateTime elapsedTime;  //how much time has passed on their shift?
-        private static double averageCrewTime;  //average shift time among all crews
-        private static double totalCrewTimeWorked;  //total crew time worked in a day
+        //private static double averageCrewTime;  //average shift time among all crews
+        //private static double totalCrewTimeWorked;  //total crew time worked in a day
 
         //public void ComputeAvgTime()
         //{

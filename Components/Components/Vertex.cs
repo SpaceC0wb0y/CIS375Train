@@ -24,7 +24,6 @@ namespace Components
         protected string stationID;
         protected int numTrainsVisited; 
         protected int numTrainsParked;  //number of trains docked at a station
-        protected int maxNumberOfTrains; //Station capacity
         protected int ticketPrice;  //fixed ticket price for a station
         protected int maxOn;  //maximum number of people getting on a train
         protected int minOn;  //minimum number of people getting on a train
@@ -107,7 +106,6 @@ namespace Components
             this.stationID = stationID;
             numTrainsVisited = 0;
             amountDelivered = 0;
-            maxNumberOfTrains = maxTrains;
             ticketPrice = ticketCost;
             IsFreightStation = true;
             IsPassengerStation = false;
@@ -146,7 +144,6 @@ namespace Components
             this.stationID = stationID;
             totalPeopleVisited = 0;
             numTrainsVisited = 0;
-            maxNumberOfTrains = maxTrains;
             ticketPrice = ticketCost;
             this.minOn = minOn;
             this.maxOn = maxOn;
