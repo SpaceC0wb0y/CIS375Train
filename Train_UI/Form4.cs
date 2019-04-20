@@ -30,18 +30,18 @@ namespace Train_UI
                     cmbMovieListingBox.Items.Add(film.GetFilmTitle());
                 }*/
 
-                string selectQuery = "SELECT station_id FROM station";
+               /* string selectQuery = "SELECT station_id FROM station";
                 connection.Open();
                 MySqlCommand command = new MySqlCommand(selectQuery, connection);
                 MySqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
                     comboBox1.Items.Add(reader.GetString("id"));
-                }
+                }*/
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
             }
         }
 

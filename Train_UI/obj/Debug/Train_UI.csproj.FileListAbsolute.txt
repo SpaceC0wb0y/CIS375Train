@@ -39,3 +39,4 @@ C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csproj.GenerateResource.ca
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csproj.CoreCompileInputs.cache
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.exe
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.pdb
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form4.resources
