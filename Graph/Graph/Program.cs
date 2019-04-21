@@ -232,6 +232,46 @@ namespace Graph
             //{
             //    List<Edge> testList = item.GetIncidentEdges();
             //}
+
+            PassengerStation pStation1 = new PassengerStation("p1", 10, 5, 20, 5, 20);
+            FreightStation fStation1 = new FreightStation("station1");
+            Hub hub1 = new Hub("Hub1");
+            Track track1 = new Track("track1", pStation1, fStation1, 20);
+            Crew crew1 = new Crew(hub1);
+
+            Graph graph = new Graph();
+
+            graph.AddVertex(pStation1);
+            graph.AddVertex(fStation1);
+            graph.AddVertex(hub1);
+            graph.AddEdge(track1);
+
+            Vertex newP1 = null;
+            Vertex newP2 = null;
+
+            try
+            {
+                newP1 = graph.FindVertex("p1"); //this should work
+                newP2 = graph.FindVertex("station100"); //this should not work, it will throw an exception;
+
+                graph.FindEdge(pStation1, fStation1, "track1");  //this will work
+                graph.FindEdge(pStation1, fStation1, "track100"); //this wont work, will throw an exception
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            graph.RemoveEdge(track1);
+            //graph.RemoveVertex(pStation1);
+
+            if (newP1.IsPassengerStation == true)
+            {
+                PassengerStation newStation = (PassengerStation)newP1;
+            }
+
+            LinkedList<Node> adjacencyListForAVertex = graph.GetList(pStation1);
+
         }
     }
 }
