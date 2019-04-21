@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Graph;
+using Components;
 
 namespace Route
 {
@@ -11,14 +12,14 @@ namespace Route
     {
         public bool IsRepeatable { get; set; }
         public bool IsDaily {get; set; }
-        private Vertex startStation;
-        private Vertex endStation;
+        private Station startStation;
+        private Station endStation;
         private DateTime startTime;
         private int amountToDeliver;
 
         public bool IsAssigned {get; set; }
 
-        public FreightRoute(bool isRepeatable, bool isDaily, bool isAssigned ,Vertex station1, Vertex station2, DateTime startTime, int amountToDeliver)
+        public FreightRoute(bool isRepeatable, bool isDaily, bool isAssigned , Station station1, Station station2, DateTime startTime, int amountToDeliver)
         {
             IsRepeatable = isRepeatable;
             IsDaily = isDaily;
@@ -29,12 +30,17 @@ namespace Route
             this.amountToDeliver = amountToDeliver;
         }
         
-        public Vertex GetStartStation()
+        public Station GetStartStation()
         {
             return startStation;
         }
 
-        public Vertex GetEndStation()
+        public void SetStartStation(Station stat)
+        {
+            this.startStation = stat;
+        }
+
+        public Station GetEndStation()
         {
             return endStation;
         }
@@ -48,6 +54,7 @@ namespace Route
         {
             return amountToDeliver;
         }
+        
     }
 
     public class PassengerRoute
@@ -57,11 +64,11 @@ namespace Route
 
         public bool IsAssigned {get; set; }
 
-        private Vertex destinationStation;
+        private Station destinationStation;
 
         public DateTime arrivalTime;
 
-        public PassengerRoute(bool isRepeatable, bool isDaily, bool isAssigned, Vertex destinationStation, DateTime arrivalTime)
+        public PassengerRoute(bool isRepeatable, bool isDaily, bool isAssigned, Station destinationStation, DateTime arrivalTime)
         {
             IsDaily = isDaily;
             IsRepeatable = isRepeatable;
@@ -72,12 +79,19 @@ namespace Route
         }
 
 
-        public Vertex GetDestinationStation()
+        public Station GetDestinationStation()
         {
             return destinationStation;
         }
- 
+
+        public DateTime GetArrivalTime()
+        {
+            return arrivalTime;
         }
+ 
+        
+
+    }
     
 
 }

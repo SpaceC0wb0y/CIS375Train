@@ -4,37 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Route;
+using Components;
 
 /*
    Description: This Graph class found below will be used to generate the railway map that the program
    will run the railway simulation on. For this project, the map will be an undirected, 
    weighted graph that will utilize an adjacency list implementation, centered around 
-   the edges involved. Temporary Vertex and Edge classes are used for testing purposes
-   but final class will rely on seperate Vertex classes (Stations and Hubs) and a seperate 
+   the edges involved. Temporary Station and Edge classes are used for testing purposes
+   but final class will rely on seperate Station classes (Stations and Hubs) and a seperate 
    Edge class (Track). The terms edge and track are interchangeable in this program. This
    graph follows an adjacency list structure using a Dictionary object. The key value will be 
-   the source vertex and the value variable will be a linked list based on an internal Node 
-   class which will hold the adjacency list for each vertex (the vertices and edges that are 
-   adjacent and incident respectively to the source vertex (again, a station or hub). All methods
+   the source Station and the value variable will be a linked list based on an internal Node 
+   class which will hold the adjacency list for each Station (the vertices and edges that are 
+   adjacent and incident respectively to the source Station (again, a station or hub). All methods
    defined in the algorithm will be implemented here as well as any auxiliary methods that need
    to be made that were not listed (i.e. getters, setters, etc.).
 */
 namespace Graph
 {
     //Description: Holds the graph implemented via an adjacency list.
-    //each element in the adjacency list will represent a single vertex
-    //(a station or hub). Each vertex will have its own linked list storing info
+    //each element in the adjacency list will represent a single Station
+    //(a station or hub). Each Station will have its own linked list storing info
     //relating to all adjacent vertices and the edges that connect them.
 
     /***************GRAPH NOT FULLY TESTED*************/
 
 
-    public class Graph
+    public class Graphy
     {
-        //dictonary that stores each vertex's adjacency list
-        private Dictionary<Vertex, LinkedList<Node>> adjacencyList;
+        //dictonary that stores each Station's adjacency list
+        private Dictionary<Station, LinkedList<Node>> adjacencyList;
         //list of all vertices currently in graph
-        private List<Vertex> vertices;
+        private List<Station> vertices;
         //list of all edges currently in graph
         private List<Edge> edges;
         //list of all trains currently in graph
@@ -43,31 +44,31 @@ namespace Graph
         //Description: Constructor method for Graph class
         //Pre-Condition: None
         //Post-Condition: New, empty graph will be instantiated
-        public Graph()
+        public Graphy()
         {
             //creates objects for all three fields
-            adjacencyList = new Dictionary<Vertex, LinkedList<Node>>();
-            vertices = new List<Vertex>();
+            adjacencyList = new Dictionary<Station, LinkedList<Node>>();
+            vertices = new List<Station>();
             edges = new List<Edge>();
             trains = new List<Train>();
         }
 
         //////////////////////////////////////Justin's Algrithm In Tas's Code/////////////////////////////////////////////////////////////////
-        //Descrtiption: Method that traverses the graph to find the shortest distance between two vertexes by traversing edges
-        //Pre-Condition: Both vertexes must exist on the graph
-        //Post-Condition: Returns the shortest distance between the two vertexes and the path they took
+        //Descrtiption: Method that traverses the graph to find the shortest distance between two Stationes by traversing edges
+        //Pre-Condition: Both Stationes must exist on the graph
+        //Post-Condition: Returns the shortest distance between the two Stationes and the path they took
 
         public class ShortestPath
         {
-            public Vertex vertex;
+            public Station Station;
             public int shortestDistance;
-            public Vertex previousVertex;
+            public Station previousStation;
 
         }
 
-         public bool AddTrain(Train T)
+        public bool AddTrain(Train T)
         {
-            //checks if vertex is already in list of trains (no duplicates allowed)
+            //checks if Station is already in list of trains (no duplicates allowed)
             if (trains.Contains(T))
             {
                 return false;  //fail
@@ -83,61 +84,61 @@ namespace Graph
         //Description: Traverses the adjacency list produced in map generation to find the shortest path from two verticies
         //Pre-Condition: Both Verticies exist on the map, and there is at least one edge between them
         //Post-Condition: The a list of verticies that contains the shortest path as well as the distance of the path is returneds
-        public List<Vertex> TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran, out int distance)
+        public List<Station> TrainRoute(Graphy graph, Station source, Station dest, Train tran, out int distance)
         {
             int infinity = 1000000;
-            List<Vertex> unvisitedNodes = new List<Vertex>();
-            unvisitedNodes = graph.GetVertices(); 
-            List<Vertex> visitedNodes = new List<Vertex>();
-            var currentVertex = source;
+            List<Station> unvisitedNodes = new List<Station>();
+            unvisitedNodes = graph.GetVertices();
+            List<Station> visitedNodes = new List<Station>();
+            Station currentStation = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
             distance = 1000000;
 
-        List<ShortestPath> shortestPaths = new List<ShortestPath>();
-          
+            List<ShortestPath> shortestPaths = new List<ShortestPath>();
+
             foreach (var item in unvisitedNodes)
             {
-                if (item == currentVertex)
+                if (item == currentStation)
                 {
                     shortestPaths.Add(new ShortestPath()
                     {
-                        vertex = currentVertex,
+                        Station = currentStation,
                         shortestDistance = 0,
-                        previousVertex = null,
+                        previousStation = null,
                     });
                 }
                 else
                 {
                     shortestPaths.Add(new ShortestPath()
                     {
-                        vertex = item,
+                        Station = item,
                         shortestDistance = infinity,
-                        previousVertex = null
+                        previousStation = null
                     });
                 }
             }
 
             while (unvisitedNodes.Count > 0)
             {
-                //visit the unvisited vertex with the smallest known distance from the start vertex
-                currentVertex = shortestPaths.Where(x => !visitedNodes.Contains(x.vertex)).OrderBy(x => x.shortestDistance).First().vertex;
+                //visit the unvisited Station with the smallest known distance from the start Station
+                currentStation = shortestPaths.Where(x => !visitedNodes.Contains(x.Station)).OrderBy(x => x.shortestDistance).First().Station;
 
-                //for the current vertex, examine its unvisited neighbours
-                neighborUnvisitedNodes = graph.GetList(currentVertex);
+                //for the current Station, examine its unvisited neighbours
+                neighborUnvisitedNodes = graph.GetList(currentStation);
 
-                //for the current vertex, calculate the distance of each neighbour form the start vertex
-                foreach(Node items in neighborUnvisitedNodes.Where(x => !visitedNodes.Contains(x.GetVertex())))
+                //for the current Station, calculate the distance of each neighbour form the start Station
+                foreach (Node items in neighborUnvisitedNodes.Where(x => !visitedNodes.Contains(x.GetStation())))
                 {
                     int shortestEdge = 1000000;
 
                     // find the shortest edge between two verticies and use that to calculate shortest path with
                     for (int edgeNum = 0; edgeNum < items.GetIncidentEdges().Count(); edgeNum++)
                     {
-                        
-                        if (items.GetIncidentEdges()[edgeNum].GetWeight() < shortestEdge )
+
+                        if (items.GetIncidentEdges()[edgeNum].GetWeight() < shortestEdge)
                         {
                             //check if the edge is not occupied before assigning it to shortest edge
-                            if ( items.GetIncidentEdges()[edgeNum].isAvailable)
+                            if (items.GetIncidentEdges()[edgeNum].isAvailable)
                             {
                                 shortestEdge = items.GetIncidentEdges()[edgeNum].GetWeight();
                             }
@@ -147,51 +148,51 @@ namespace Graph
                                 items.GetIncidentEdges()[edgeNum].IncrementNumDetectedCollisions();
                                 //call rerouting method in some way when using RunRoute
                             }
-                         
+
                         }
                         // if you want to see the ID of the shortest edge between the verticies
-                        //Console.WriteLine("The Shortest Edge for " + currentVertex.GetID() + " and " + items.GetVertex().GetID() + " is " + items.GetIncidentEdges()[edgeNum].GetID());
+                        //Console.WriteLine("The Shortest Edge for " + currentStation.GetID() + " and " + items.GetStation().GetID() + " is " + items.GetIncidentEdges()[edgeNum].GetID());
                     }
 
                     // Tell the user if a route cannot be found between the two verticies i.e. shortestEdge does not change
                     if (shortestEdge >= 1000000)
                     {
                         Console.WriteLine("CRITICAL ERROR!: NO EDGES FOUND ROUTE IMPOSSIBLE");
-                        
-                    } 
 
-                    distance = shortestPaths.Where(x => x.vertex == currentVertex).First().shortestDistance + shortestEdge;
+                    }
+
+                    distance = shortestPaths.Where(x => x.Station == currentStation).First().shortestDistance + shortestEdge;
                     //items.GetIncidentEdges()[0].GetWeight(); 
-                    //if the calculated distance of a vertex is less than the known distance, update the shortest distance
-                    if (shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance > distance)
+                    //if the calculated distance of a Station is less than the known distance, update the shortest distance
+                    if (shortestPaths.Where(x => x.Station == items.GetStation()).First().shortestDistance > distance)
                     {
-                        //update the previous vertex for each of the updated distances
-                        shortestPaths.Where(x => x.vertex == items.GetVertex()).First().shortestDistance = distance;
-                        shortestPaths.Where(x => x.vertex == items.GetVertex()).First().previousVertex = currentVertex;
+                        //update the previous Station for each of the updated distances
+                        shortestPaths.Where(x => x.Station == items.GetStation()).First().shortestDistance = distance;
+                        shortestPaths.Where(x => x.Station == items.GetStation()).First().previousStation = currentStation;
                     }
                 }
 
-                unvisitedNodes.Remove(currentVertex);
-                visitedNodes.Add(currentVertex);
+                unvisitedNodes.Remove(currentStation);
+                visitedNodes.Add(currentStation);
             }
 
             // put the visited nodes back into the graph
             graph.vertices = visitedNodes;
 
             //display the shortest path between two verticies
-            Console.WriteLine("shortest distance from " + source.GetID() + " to " + dest.GetID() + " is: " + shortestPaths.Where(x => x.vertex == dest).First().shortestDistance);
+            Console.WriteLine("shortest distance from " + source.GetID() + " to " + dest.GetID() + " is: " + shortestPaths.Where(x => x.Station == dest).First().shortestDistance);
             Console.WriteLine("the shortest path from " + source.GetID() + " to " + dest.GetID() + " is: ");
 
 
-            ShortestPath currentRow = shortestPaths.Where(x => x.vertex == dest).First();
-            List<Vertex> sp = new List<Vertex>();
+            ShortestPath currentRow = shortestPaths.Where(x => x.Station == dest).First();
+            List<Station> sp = new List<Station>();
 
             sp.Add(dest);
 
-            while (currentRow.previousVertex != source)
+            while (currentRow.previousStation != source)
             {
-                sp.Add(currentRow.previousVertex);
-                currentRow = shortestPaths.Where(x => x.vertex == currentRow.previousVertex).First();
+                sp.Add(currentRow.previousStation);
+                currentRow = shortestPaths.Where(x => x.Station == currentRow.previousStation).First();
             }
 
             sp.Add(source);
@@ -207,37 +208,37 @@ namespace Graph
             //{
             //    tran.SetPath(sp);
 
-            //    tran.SetCurrentVertex(tran.GetPath().First());
             //    tran.SetCurrentStation(tran.GetPath().First());
-            //   tran.SetNextVertex(tran.GetPath().ElementAt(1));
+            //    tran.SetCurrentStation(tran.GetPath().First());
+            //   tran.SetNextStation(tran.GetPath().ElementAt(1));
             //    tran.SetHomeHub(tran.GetPath().First());
             //}
 
-            //foreach (Vertex v in sp)
+            //foreach (Station v in sp)
             //{
-                
-              //  Console.WriteLine(v.GetID());
+
+            //  Console.WriteLine(v.GetID());
             //}
 
             //reset info for next run
         }
 
-        //Description: Method adds a vertex to the adjacency list graph
-        //Pre-Condition: Vertex object is already created beforehand
-        //Post-Condition: New, empty adjacency list in the graph dictionary is added for the vertex
+        //Description: Method adds a Station to the adjacency list graph
+        //Pre-Condition: Station object is already created beforehand
+        //Post-Condition: New, empty adjacency list in the graph dictionary is added for the Station
         //and a boolean is returned to indicate success or fail
-        public bool AddVertex(Vertex V)
+        public bool AddStation(Station V)
         {
-            //checks if vertex is already in graph (no duplicates allowed)
+            //checks if Station is already in graph (no duplicates allowed)
             if (adjacencyList.ContainsKey(V))
             {
                 return false;  //fail
             }
-            //vertex is original, will add to graph
+            //Station is original, will add to graph
             else
             {
                 adjacencyList.Add(V, new LinkedList<Node>());
-                vertices.Add(V);  //adds vertex to vertices collection
+                vertices.Add(V);  //adds Station to vertices collection
                 return true;  //success
             }
         }
@@ -259,7 +260,7 @@ namespace Graph
             return edges.Count;
         }
 
-        public List<Vertex> GetVertices()
+        public List<Station> GetVertices()
         {
             return vertices;
         }
@@ -281,12 +282,12 @@ namespace Graph
             //have a node dedicated to each other
             bool adjacentNodeFound = false;
 
-            //checks if source vertex exists in graph
+            //checks if source Station exists in graph
             if (!adjacencyList.ContainsKey(E.GetSource()))
             {
                 return false; //it isn't
             }
-            //checks if destination vertex exists in graph
+            //checks if destination Station exists in graph
             if (!adjacencyList.ContainsKey(E.GetDest()))
             {
                 return false;  //it isn't
@@ -298,13 +299,13 @@ namespace Graph
                 return false;
             }
 
-            //traverses the adjacency linked list for that particular vertex
+            //traverses the adjacency linked list for that particular Station
             LinkedList<Node> iterator = adjacencyList[E.GetSource()];
 
             foreach (var item in iterator)
             {
-                //finds which node in the list has the adjacent vertex
-                if (E.GetDest() == item.GetVertex())
+                //finds which node in the list has the adjacent Station
+                if (E.GetDest() == item.GetStation())
                 {
                     adjacentNodeFound = true;
                     item.AddIncidentEdge(E);  //adds the edge to the incident edge list for that particular node
@@ -314,18 +315,18 @@ namespace Graph
             //this is the first edge connecting two vertices
             if (!adjacentNodeFound)
             {
-                //creates a new element in source vertex's adjacency list
+                //creates a new element in source Station's adjacency list
                 adjacencyList[E.GetSource()].AddLast(new Node(E.GetDest(), E));
                 Console.WriteLine("A new node is supposed to be made");
             }
 
-            //traverses the adjacency linked list for the other vertex connected by the edge
+            //traverses the adjacency linked list for the other Station connected by the edge
             iterator = adjacencyList[E.GetDest()];
             adjacentNodeFound = false;   //resets boolean value
 
             foreach (var item in iterator)
             {
-                if (E.GetSource() == item.GetVertex())
+                if (E.GetSource() == item.GetStation())
                 {
                     adjacentNodeFound = true;
                     item.AddIncidentEdge(E);  //adds the edge to the incident edge list for that particular node
@@ -334,7 +335,7 @@ namespace Graph
 
             if (!adjacentNodeFound)
             {
-                //creates a new element in destination vertex's adjacency list
+                //creates a new element in destination Station's adjacency list
                 adjacencyList[E.GetDest()].AddLast(new Node(E.GetSource(), E));
             }
 
@@ -342,12 +343,12 @@ namespace Graph
             return true;  //success
         }
 
-        //Description: Method removes the vertex from graph and from all adjacency lists that it appears in
+        //Description: Method removes the Station from graph and from all adjacency lists that it appears in
         //Pre-Condition: None
         //Post-Condition: The adjacency list for V is removed and it's removed from all lists that it appears in
-        public bool RemoveVertex(Vertex V)
+        public bool RemoveStation(Station V)
         {
-            //checks if vertex exists in graph
+            //checks if Station exists in graph
             if (!adjacencyList.ContainsKey(V))
             {
                 return false; //it doesn't
@@ -358,29 +359,29 @@ namespace Graph
             //checks each node in the linked list of V to find all adjacent vertices
             foreach (var item in iterator)
             {
-                Vertex temp = item.GetVertex();  //checks which vertex it is adjacent to
-                LinkedList<Node> subIterator = adjacencyList[temp];  //goes to that adjacent vertex's adjacency list
+                Station temp = item.GetStation();  //checks which Station it is adjacent to
+                LinkedList<Node> subIterator = adjacencyList[temp];  //goes to that adjacent Station's adjacency list
                 //traverses the adjacent list to find which node holds V
                 foreach (var node in subIterator)
                 {
                     //checks if V is in the current node
-                    if (node.GetVertex() == V)
+                    if (node.GetStation() == V)
                     {
-                        //gets all incident edges between V and the current vertex
+                        //gets all incident edges between V and the current Station
                         List<Edge> removal = node.GetIncidentEdges();
                         foreach (var tempEdge in removal)
                         {
                             edges.Remove(tempEdge);  //removes all of the incident edges from the edge list
                         }
 
-                        subIterator.Remove(node);  //removes V from the other vertex's adjacency list entirely
+                        subIterator.Remove(node);  //removes V from the other Station's adjacency list entirely
                         break;
                     }
                 }
             }
 
             adjacencyList.Remove(V);  //removes V's adjacency list from dictionary
-            vertices.Remove(V); //removes V from the vertex list
+            vertices.Remove(V); //removes V from the Station list
 
             return true;  //success
         }
@@ -390,8 +391,8 @@ namespace Graph
         //Post-Condition: Removes edge from all places in the adjacency list where it appears
         public bool RemoveEdge(Edge E)
         {
-            Vertex tempSource = E.GetSource();  //stores the source vertex
-            Vertex tempDest = E.GetDest();  //stores destination vertex
+            Station tempSource = E.GetSource();  //stores the source Station
+            Station tempDest = E.GetDest();  //stores destination Station
 
             //checks if both vertices are in the graph
             if (!adjacencyList.ContainsKey(tempSource) || !adjacencyList.ContainsKey(tempDest))
@@ -399,13 +400,13 @@ namespace Graph
                 return false; //one or both are missing
             }
 
-            //iterates through source vertex's adjacency list
+            //iterates through source Station's adjacency list
             LinkedList<Node> iterator = adjacencyList[tempSource];
             foreach (var node in iterator)
             {
                 //checks each node in linked list until it finds the one
-                //with the destination vertex
-                if (node.GetVertex() == tempDest)
+                //with the destination Station
+                if (node.GetStation() == tempDest)
                 {
                     //List<Edge> checkSum = node.GetIncidentEdges();
                     //foreach(var item in checkSum)
@@ -426,11 +427,11 @@ namespace Graph
                 }
             }
 
-            //iterates through the destination vertex's adjacency list and does the same thing
+            //iterates through the destination Station's adjacency list and does the same thing
             iterator = adjacencyList[tempDest];
             foreach (var node in iterator)
             {
-                if (node.GetVertex() == tempSource)
+                if (node.GetStation() == tempSource)
                 {
                     node.RemoveIncidentEdge(E);
                     //checks if the incident edge collection is now empty
@@ -454,15 +455,15 @@ namespace Graph
             return true;
         }
 
-        //Description: Returns the adjacency list for the specified vertex if it exists in the graph
+        //Description: Returns the adjacency list for the specified Station if it exists in the graph
         //Pre-Condition: None
-        //Post-Condition: Returns the adjacency list of ther vertex or throws exception if vertex is
+        //Post-Condition: Returns the adjacency list of ther Station or throws exception if Station is
         //not in the graph
-        public LinkedList<Node> GetList(Vertex V)
+        public LinkedList<Node> GetList(Station V)
         {
             if (!adjacencyList.ContainsKey(V))
             {
-                throw new Exception("Vertex is not in graph");
+                throw new Exception("Station is not in graph");
             }
             else
             {
@@ -471,12 +472,12 @@ namespace Graph
 
         }
 
-        //Description: Checks graph (vertex collection of graph) for the vertex based on vertex ID
+        //Description: Checks graph (Station collection of graph) for the Station based on Station ID
         //Pre-Condition: None
-        //Post-Condition: Returns the vertex if found, throws exception if not found
-        public Vertex FindVertex(string name)
+        //Post-Condition: Returns the Station if found, throws exception if not found
+        public Station FindStation(string name)
         {
-            foreach (var item in vertices)
+            foreach (Station item in vertices)
             {
                 if (name == item.GetID())
                 {
@@ -484,19 +485,19 @@ namespace Graph
                 }
             }
 
-            throw new Exception("Vertex not found in graph");
+            throw new Exception("Station not found in graph");
         }
 
         //Description: Checks graph (edge collection of graph) for the edge based on edge ID
         //Pre-Condition: None
         //Post-Condition: Returns the edge if found, throws exception if not found
-        public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
+        public Edge FindEdge(Station startStation, Station endStation, string name)
         {
             foreach (var item in edges)
             {
-                if (startVertex == item.GetSource())
+                if (startStation == item.GetSource())
                 {
-                    if (endVertex == item.GetDest())
+                    if (endStation == item.GetDest())
                     {
                         if (name == item.GetID())
                         {
@@ -505,9 +506,9 @@ namespace Graph
                     }
                 }
 
-                if (endVertex == item.GetSource())
+                if (endStation == item.GetSource())
                 {
-                    if (startVertex == item.GetDest())
+                    if (startStation == item.GetDest())
                     {
                         if (name == item.GetID())
                         {
@@ -523,10 +524,10 @@ namespace Graph
         //Description: Given two vertices, the method checks if they are adjacent in the graph
         //Pre-Condition: None
         //Post-Condition: Returns true if they are adjacent, false if not
-        public bool IsAdjacent(Vertex source, Vertex dest)
+        public bool IsAdjacent(Station source, Station dest)
         {
-            bool isAdjacentInSource = false;  //is adjacency proven in source vertex's adjacency list?
-            bool isAdjacentInDest = false;  //is adjacency proven in destination vertex's adjacency list?
+            bool isAdjacentInSource = false;  //is adjacency proven in source Station's adjacency list?
+            bool isAdjacentInDest = false;  //is adjacency proven in destination Station's adjacency list?
 
             if (!adjacencyList.ContainsKey(source))
             {
@@ -537,29 +538,29 @@ namespace Graph
                 return false;
             }
 
-            //an iterator to traverse the adjacency list for the source vertex
+            //an iterator to traverse the adjacency list for the source Station
             LinkedList<Node> iterator = adjacencyList[source];
 
-            //traverses the linked list to check each node for the destination vertex
+            //traverses the linked list to check each node for the destination Station
             foreach (var item in iterator)
             {
-                //checks if the destination vertex is found in the current node 
+                //checks if the destination Station is found in the current node 
                 //of adjacency list
-                if (dest == item.GetVertex())
+                if (dest == item.GetStation())
                 {
                     isAdjacentInSource = true;  //success, vertices are adjacent in one list
                 }
             }
 
-            //an iterator to traverse the adjacency list for the destination vertex
+            //an iterator to traverse the adjacency list for the destination Station
             iterator = adjacencyList[dest];
 
-            //traverses the linked list to check each node for the source vertex
+            //traverses the linked list to check each node for the source Station
             foreach (var item in iterator)
             {
-                //checks if the source vertex is found in the current node 
+                //checks if the source Station is found in the current node 
                 //of adjacency list
-                if (source == item.GetVertex())
+                if (source == item.GetStation())
                 {
                     isAdjacentInDest = true;  //success, vertices are adjacent in one list
                 }
@@ -580,27 +581,27 @@ namespace Graph
 
 
     //Description: This class represents a single node within a single linked within the adjacency list
-    //the node stores the adjacent vertex to the source vertex and all edges that connects the two vertices
+    //the node stores the adjacent Station to the source Station and all edges that connects the two vertices
     //as well as accessors for them
     public class Node
     {
-        private Vertex V;
+        private Station V;
         private List<Edge> incidentEdges;
 
         //Description: Constructor method for Node
-        //Pre-Condition: Vertex must exist and be incident to source vertex
-        //Post-Condition: New Node in adjacency list for a vertex is made
-        public Node(Vertex V, Edge E)
+        //Pre-Condition: Station must exist and be incident to source Station
+        //Post-Condition: New Node in adjacency list for a Station is made
+        public Node(Station V, Edge E)
         {
             this.V = V;
             incidentEdges = new List<Edge>();
             incidentEdges.Add(E);
         }
 
-        //Description: Getter for the vertex field
+        //Description: Getter for the Station field
         //Pre-Condition: None
-        //Post-Condition: Returns the adjacent vertex
-        public Vertex GetVertex()
+        //Post-Condition: Returns the adjacent Station
+        public Station GetStation()
         {
             return V;
         }
@@ -636,13 +637,13 @@ namespace Graph
             incidentEdges.Remove(E);
         }
 
-        //Description: Prints out the vertex and edge list for the current adjacent vertex
+        //Description: Prints out the Station and edge list for the current adjacent Station
         //Pre-Condition: None
-        //Post-Condition: Prints out the Vertex info and all stored edge info line by line
+        //Post-Condition: Prints out the Station info and all stored edge info line by line
         public void PrintContents()
         {
             Console.WriteLine("Node:");
-            Console.WriteLine(V);  //prints vertex info
+            Console.WriteLine(V);  //prints Station info
             foreach (var item in incidentEdges)  //iterates through edge list
             {
                 Console.WriteLine(item);  //prints info for each incident edge
@@ -650,391 +651,24 @@ namespace Graph
         }
     }
 
-    //Description: Temporary Vertex class that will represent the stations
-    //and hubs.
-    public class Vertex
-    {
-        private string ID;  //name/ID of vertex
-
-        //Description: Constructor method
-        //Pre-Condition: None
-        //Post-Condition: New vertex object made and name field initialized
-        public Vertex(string name)
-        {
-            ID = name;
-        }
-
-        //Description: Getter method of ID field
-        //Pre-Condition: None
-        //Post-Condition: Returns the value of ID
-        public string GetID()
-        {
-            return ID;
-        }
-
-        //Description: Method to replace object name when it is used as a string
-        //Pre-Condition: None
-        //Post-Condition: String to be used when object reference name is used in an output statement
-        public override string ToString()
-        {
-            return "Vertex Name: " + ID;
-        }
-    }
-
-    public class Train
-    {
-       public int index;
-       protected int totalDistance;
-
-       protected int profitGenerated;
-
-       protected int speed;
-       protected Vertex currentVertex;
-       protected Vertex nextVertex;
-       protected Vertex currentStation;
-       //protected Crew currentCrew;
-       protected Edge currentTrack; 
-       protected string currentStatus; // status types include "running", "finished", "waiting", "down", "initial", "completed"
-       protected string ID;
-       public Graph currentGraph;
-
-       protected Vertex homeHub; 
-
-        /// For when passenger and freight trains get split these methods go to the subclass
-        // FREIGHT TRAIN VARABLES
-        
-    
-        private int totalDistanceFromClosestHUBToRouteSourceStation;
-        private IList<Vertex> ClosestPathToTheHUB = new List<Vertex>();
-        private List<Vertex> TheRoute = new List<Vertex>();
-        private List<Vertex> TheRouteBackHome = new List<Vertex>();
-        private List<Vertex> TheNextRoute = new List<Vertex>();
-
-
-
-        // PASSENGER TRAIN VARIABLES
-        private IList<Vertex> RoutePT = new List<Vertex>();
-        
-        
-        // GETTERS AND SETTERS FOR FREIGHT TRAIN
-
-        
-
-        // GETTERS AND SETTERS FOR FREIGHT TRAIN
-
-        
-        
-
-        public Train(string name, string type, Graph currentGraph)
-        {
-            ID = name;
-            index = 0;
-            totalDistance = 0;
-            currentStatus = "initial";
-            this.currentGraph = currentGraph;
-        }
-
-        public Vertex GetHomeHub()
-        {
-            return homeHub;
-        }
-        public void SetHomeHub(Vertex vert)
-        {
-            this.homeHub = vert;
-        }
-        public void SetCurrentTrack(Edge track)
-        {
-            this.currentTrack = track;
-        }
-        public Edge GetCurrentTrack()
-        {
-            return currentTrack;
-        }
-        public Vertex GetCurrentStation()
-        {
-            return currentStation;
-        }
-        public void SetCurrentStation(Vertex vert)
-        {
-            this.currentStation = vert;
-        }
-        public string GetCurrentStatus()
-        {
-            return currentStatus;
-        }
-        public void SetCurrentStatus(string newStatus)
-        {
-            this.currentStatus = newStatus;
-        }
-        public Vertex GetNextVertex()
-        {
-            return nextVertex;
-        }
-        public void SetNextVertex(Vertex vert)
-        {
-            this.nextVertex = vert;
-        }
-        public Vertex GetCurrentVertex()
-        {
-            return currentVertex;
-        }
-        public void SetCurrentVertex(Vertex vert)
-        {
-            this.currentVertex = vert;
-        }
-        public int GetTotalDistance()
-        {
-            return totalDistance;
-        }
-        public string GetID()
-        {
-            return ID;
-        }
-
-
-        public override string ToString()
-        {
-            return "Vertex Name: " + ID;
-        }
-        public List<Vertex> GetTheRoute()
-        {
-            return TheRoute;
-        }
-
-       
-        
-        //Description: Method will run though one iteration of a train's route, when the route is completed
-        // the freight train will return to its home hub, collision and rerouting to be included
-        //Pre-Condition: Freight Train has to exist on the graph, and must be assigned a route beforehand
-        //Post-Condition: Train will be set to one of 5 status, when the train status is 'finished' the route stops operating
-        public void RunRouteFT (Graph graph, Train tran)
-        {
-            currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran, out int distance);       
-
-            if (tran.GetCurrentStatus() == "initial")
-                tran.SetCurrentStatus("running");
-
-            if (tran.currentStatus != "finished" || tran.currentStatus != "down" || tran.currentStatus != "completed")
-            {
-                if (tran.nextVertex == tran.TheRoute.Last())
-                {
-                    tran.SetCurrentStatus("completed");
-
-                    tran.SetCurrentStation(tran.TheRoute[index + 1]);
-                    tran.SetCurrentVertex(tran.TheRoute[index + 1]);
-                    tran.SetNextVertex(tran.TheRouteBackHome[0]);
-
-                } 
-                else 
-                {
-                    // warp train to the station 
-                    tran.SetCurrentStation(tran.TheRoute[index + 1]);
-                    // set the current vertex to the next vertex over for the next run
-                    tran.SetCurrentVertex(tran.TheRoute[index + 1]);
-                    // set the next vertex to two over from the list for the next run  
-                    tran.SetNextVertex(tran.TheRoute[index + 2]);
-
-                    Console.WriteLine("Train Arriving at station " + tran.currentStation);
-            
-                }
-
-            tran.totalDistance += distance;
-
-            index += 1;
-
-            } else if (tran.currentStatus == "completed")
-            {   
-                // have return something to let the master know that the train has finished running for the day
-                Console.WriteLine("TRAIN HAS FINSIHED ROUTE");
-                currentGraph.TrainRoute(graph, tran.GetCurrentVertex(), tran.GetNextVertex(), tran, out distance);
-
-                tran.SetCurrentStation(tran.TheRouteBackHome[index + 1]);
-                tran.SetCurrentVertex(tran.TheRoute[index + 1]);
-                tran.SetNextVertex(tran.TheRouteBackHome[index + 2]);
-
-            }         
-
-        }
-
-        // Method that should assign routes to freight trains by cycling through each train until all routes are assigned
-        //MEANT FOR USE IN THE MASTER CONTROL 
-        //Pre-Condition: Freight train has to exist on the map, controller must produce a premade list of freight trains and routes
-        //Post-Condition: each train gets assigned a route until all routes are assigned
-        public void AssignRouteFT (Graph g, IList<Train> FTList, IList<FreightRoute> FTRoute)
-        {
-            //IDictionary<Node, Linklist> graph;
-            IList<Train> FT;                      // FT = Freight Trains
-            IList<FreightRoute> FR;              // FR = Freight Route
-            
-            FT = FTList; 
-            FR = FTRoute;
-
-            if (FT.Count > 0 && g != null && FR.Count > 0)
-            {
-            // foreach route that exists in the list of freight routes
-            foreach(FreightRoute R in FR) 
-            {
-                
-                if(FT.Count > 0)
-                {
-                    int totalDistance = 1000000;
-                    // foreach train in list of freight trains
-                    foreach (Train ft in FT)
-                    {
-                        int temp = 1000000;
-                        int routetemp = 100000;
-                        int hometemp = 100000;
-                        // find the closet path to the hub from where the current station is to where its home hub is
-                        IList<Vertex> closestPathToHub = g.TrainRoute(g ,ft.currentVertex, R.GetStartStation(), ft, out temp);
-                        if( totalDistance > temp)
-                        {
-                            ft.homeHub = ft.currentVertex;
-				            ft.totalDistanceFromClosestHUBToRouteSourceStation = temp;
-                            // assign the closet path to the hub to the train
-				            ft.ClosestPathToTheHUB = closestPathToHub;
-                            // assign the full shortest path route to the train
-				            ft.TheRoute = g.TrainRoute(g, R.GetStartStation(), R.GetEndStation(), ft, out routetemp);
-                            // assign the shortest path from the end of the full route to the train's home hub to the train 
-				            ft.TheRouteBackHome = g.TrainRoute(g, R.GetEndStation(), ft.GetHomeHub(), ft, out hometemp);
-                        }
-                    }
-                    R.IsAssigned = true;
-                }
-                else
-                {
-                    R.IsAssigned = false;
-                }
-            }
-            // Once a fT has 2 phases and hase some time remaining to comeplete another ride.
-            // Check
-            // if there exists unassigned routes in the freight route list
-            while (FR.Where(x => x.IsAssigned == false).Count() > 0) // LINQ
-            {
-            	foreach(FreightRoute R in FR.Where(x=> x.IsAssigned == false))
-            	{
-                    foreach (Train ft in FT)
-                    {
-                    int temp = 1000000;
-                    int routetemp = 100000;
-                    int hometemp = 100000;
-
-                        IList<Vertex> closestPathToHub = g.TrainRoute(g, ft.currentVertex, ft.GetHomeHub(), ft, out temp);
-                        if( totalDistance > temp)
-                        {
-                            //Issue: how do we make sure we hit the vertices between the first and last verticies in the new route?
-				            ft.totalDistanceFromClosestHUBToRouteSourceStation += temp;
-				            ft.ClosestPathToTheHUB = closestPathToHub;
-                            //The route that has not been assigned yet's shortest path
-				            ft.TheNextRoute = g.TrainRoute(g, R.GetStartStation(), R.GetEndStation(), ft , out hometemp);
-                            //Add the new route to the existing route that the train will run
-                            ft.TheRoute.AddRange(ft.TheNextRoute);
-                            //Find the shortest path from the starting vertex to the end vertex (not including the vertecies in the middle)
-                            // Where the issue should be resolved
-                            ft.TheRoute = g.TrainRoute(g, ft.TheRoute.First(), ft.TheRoute.Last(), ft , out hometemp);
-                            //Find the path from the end of the route to the home vertex
-				            ft.TheRouteBackHome = g.TrainRoute(g, ft.TheRoute.Last(), ft.GetHomeHub(), ft , out routetemp);
-                        }
-                    }
-	            }
-             }
-        }
-        else
-        {
-            Console.WriteLine("ERROR, NO TRAINS");
-        }
-
-    }
-    
-        // Method that should assign routes to passenger trains by cycling through each train until all routes are assigned
-        //MEANT FOR USE IN THE MASTER CONTROL 
-        //Pre-Condition: Passenger train has to exist on the map, controller must produce a premade list of passenger trains and routes
-        //Post-Condition: passenger trains get assigned a single station based on the arrival time, moving in round robin format until each
-        //every route has been assigned, then find the shortest path of each of those routes to find the true route to assign to the trains
-         public void AssignRoutePT (Graph g, IList<Train> PTList, IList<PassengerRoute> PTRoute)
-        {
-            //IDictionary<Node, Linklist> graph;
-            IList<Train> PT;                      // PT = Passenger Trains
-            IList<PassengerRoute> PR;              // PR = Passenger Route
-            
-            PT = PTList;
-            PR = PTRoute;
-        
-            
-            if (PT.Count > 0 && g != null && PR.Count > 0)
-            {
-                PR = PR.OrderBy(x => x.arrivalTime).ToList();
-
-            foreach(PassengerRoute R in PR)
-            {
-                if(PT.Count > 0)
-                {          
-                    //int totalDistance = 1000000;
-
-                    if (PR.Where(x => x.IsAssigned == false).Count() > 0) // LINQ
-                    {
-
-                    foreach (Train pt in PT)
-                    {
-
-                        if (pt.RoutePT.Count() == 0)
-                        {
-                            pt.homeHub = pt.currentVertex;
-                            pt.RoutePT.Add(pt.homeHub);
-                        }
-                        else
-                        {
-                            pt.RoutePT.Add(R.GetDestinationStation());                     
-                        }
-
-                    }
-                    }
-                    R.IsAssigned = true;
-                }
-                
-            }
-            
-           foreach(Train pt in PT)
-           {
-               int temp = 1000000;
-               int hometemp = 1000000;
-
-               pt.RoutePT.Reverse();
-
-               IList<Vertex> closestPathToHub = g.TrainRoute(g, pt.currentVertex, pt.homeHub, pt, out temp);
-               if (totalDistance > temp)
-               {
-                   //Issue: how do we make sure we hit the vertices between the first and last verticies in the new route?
-                   pt.totalDistanceFromClosestHUBToRouteSourceStation = temp;
-                   pt.ClosestPathToTheHUB = closestPathToHub;
-                   pt.TheRouteBackHome = g.TrainRoute(g, pt.RoutePT.Last(), pt.RoutePT.First(), pt, out hometemp);
-
-               }
-           }
-        }
-        else
-        {
-            Console.WriteLine("ERROR, NO TRAINS");
-        }
-
-    }
-    }
+     
 
     //Description: Temporary edge class that theorietically represents a train track.
     public class Edge
     {
         int weight;  //weight of an track
         string edgeID;  //name/ID of track
-        Vertex source;  //source vertex that track spawns from (one end)
-        Vertex dest;    ////destination vertex that track goes to (one end)
+        Station source;  //source Station that track spawns from (one end)
+        Station dest;    ////destination Station that track goes to (one end)
         public bool isAvailable;
         private int numDetectedCollisions;
         private int numTimesUsed;
         private int cost;
 
         //Description: Edge constructor that intializes the fields of a track
-        //Pre-Condition: Both source and destination vertex must exist in graph
+        //Pre-Condition: Both source and destination Station must exist in graph
         //Post-Condition: New edge added to track
-        public Edge(string name, Vertex source, Vertex dest, int weight)
+        public Edge(string name, Station source, Station dest, int weight)
         {
             edgeID = name;
             this.weight = weight;
@@ -1063,23 +697,23 @@ namespace Graph
             return weight;
         }
 
-        //Description: Getter for source vertex
+        //Description: Getter for source Station
         //Pre-Condition: None
-        //Post-Condition: Returns the source vertex object
-        public Vertex GetSource()
+        //Post-Condition: Returns the source Station object
+        public Station GetSource()
         {
             return source;
         }
 
-        //Description: Getter for destination vertex
+        //Description: Getter for destination Station
         //Pre-Condition: None
-        //Post-Condition: Returns the destination vertex object
-        public Vertex GetDest()
+        //Post-Condition: Returns the destination Station object
+        public Station GetDest()
         {
             return dest;
         }
 
-         //Description: Gets the number of collisions detected on an edge
+        //Description: Gets the number of collisions detected on an edge
         //Pre-Condition: None
         //Post-Condition: Returns number of detected collisions field
         public int GetNumCollisions()
@@ -1111,7 +745,7 @@ namespace Graph
             return isAvailable;
         }
 
-         //Description: Gets track cost
+        //Description: Gets track cost
         //Pre-Condition: None
         //Post-Condition: Returns cost field of track object
         public int GetCost()
@@ -1141,7 +775,8 @@ namespace Graph
         }
 
 
-       
+
     }
 
 }
+

@@ -1,4 +1,4 @@
-﻿
+﻿using Components;
 
 namespace Graph
 {
@@ -7,12 +7,12 @@ namespace Graph
     {
         static void Main(string[] args)
         {
-            Vertex A = new Vertex("Vertex A");
-            Vertex B = new Vertex("Vertex B");
-            Vertex C = new Vertex("Vertex C");
-            Vertex D = new Vertex("Vertex D");
-            Vertex E = new Vertex("Vertex E");
-            Vertex H1 = new Vertex("Hub 1");
+            FreightStation A = new FreightStation("Vertex A", 25);
+            FreightStation B = new FreightStation("Vertex B", 69);
+            FreightStation C = new FreightStation("Vertex C", 420);
+            FreightStation D = new FreightStation("Vertex D", 9001);
+            FreightStation E = new FreightStation("Vertex E", 21);
+            Vertex H1 = new Hub("Hub 1");
             Edge E1 = new Edge("Edge A to B", A, B, 6);
             Edge E2 = new Edge("Edge A to D", A, D, 1);
             Edge E3 = new Edge("Edge B to D", B, D, 2);
@@ -42,7 +42,7 @@ namespace Graph
             //Console.WriteLine("Edges in Node:");
             //Test.PrintContents();
 
-            Graph test = new Graph();
+            Graphy test = new Graphy();
             //test.AddVertex(V1);
             //bool isThere = test.AddVertex(V1);
             //test.AddVertex(V2);
@@ -51,11 +51,12 @@ namespace Graph
             //int count = test.NumVertices();
             //Console.WriteLine("Num: " + count);
 
-            test.AddVertex(A);
-            test.AddVertex(B);
-            test.AddVertex(C);
-            test.AddVertex(D);
-            test.AddVertex(E);
+            test.AddStation(A);
+            test.AddStation(B);
+            test.AddStation(C);
+            test.AddStation(D);
+            test.AddStation(E);
+
 
             
             //List<Vertex> vertices = test.GetVertices();
