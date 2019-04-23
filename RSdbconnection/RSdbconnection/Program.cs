@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 using System.Windows.Forms;
+using System.Data;
 
 namespace RSdbconnection
 {
@@ -184,6 +185,17 @@ namespace RSdbconnection
 
                return dataReader;
           }
-     }
+          public DataTable SelectDataTable(string query)
+          {
+               DataTable dtX = new DataTable();
 
+               MySqlCommand cmd = new MySqlCommand(query, connection);
+               //Create a data reader and Execute the command
+               MySqlDataReader dataReader = cmd.ExecuteReader();
+
+               dtX.Load(dataReader);
+
+               return dtX;
+          }
+     }
 }

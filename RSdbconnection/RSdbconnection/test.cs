@@ -32,9 +32,24 @@ namespace ConnectMySQL
             List<List<string>> mostUsedStationMETRIC = connection.Select("select station_id, num_times_used from RSdatabase.station order by num_times_used desc; ");
             List<List<string>> mostUsedTrackMETRIC = connection.Select("select track_id, num_times_used from RSdatabase.tracks order by num_times_used desc; ");
             List<List<string>> mostCollisionProneTrack = connection.Select("select track_id, detected_coll from RSdatabase.tracks order by detected_coll desc; ");
-          
+
+
+               List<List<string>> asd = connection.Select("select satation1, station2 from RSdatabase.repeatable_f_routes; ");
+               List<FreightRoute> fr = new List<FreightRoute>();
+               FreightRoute f = new FreightRoute();
+               if (asd != null && asd.Count > 0)
+               {
+                    foreach(List<string> t1 in asd.ToList())
+                    {
+                         fr.station1 = t1[0].ToString();
+                         fr.station2 = t1[1].ToString();
+                    }
+                    fr.Add(f);
+                    f = new FreightRoute();
+
+               }
                //If you want to know how to iterate through List of Lists, check Handy Resources in DesignDocs of Omar&Maitra
-        }
+          }
 
     }
 
