@@ -14,7 +14,7 @@ namespace Master
         static void RunSimulation(Graph g, Clock MasterClock, int numDaysInBreakpoint)
         {
             List<FreightTrain> freightTrains = new List<FreightTrain>();
-            List<FreightRoute> dummyRoutes = new List<FreightRoute>();
+            //List<FreightRoute> dummyRoutes = new List<FreightRoute>();
             for (int i = 0; i < numDaysInBreakpoint; i++)
             {
                 //FT.Where(x => x.IsFreightTrain == true && x.IsAssigned == true)
