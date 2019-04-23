@@ -45,3 +45,8 @@ C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.exe
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.pdb
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.csprojAssemblyReference.cache
 C:\Users\jemacfad\Desktop\Train_UI\obj\Debug\Train_UI.Form5.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form5.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form6.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form7.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form8.resources
+C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form9.resources

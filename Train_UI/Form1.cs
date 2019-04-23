@@ -766,5 +766,29 @@ namespace Train_UI
             Form5 fiveForm = new Form5();
             fiveForm.Show();
         }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            Form6 sixthForm = new Form6();
+            sixthForm.Show();
+        }
+
+        private void button15_Click(object sender, EventArgs e)
+        {
+            Form7 seventhForm = new Form7();
+            seventhForm.Show();
+        }
+
+        private void button16_Click(object sender, EventArgs e)
+        {
+            Form8 EightForm = new Form8();
+            EightForm.Show();
+        }
+
+        private void button17_Click(object sender, EventArgs e)
+        {
+            Form9 NineForm = new Form9();
+            NineForm.Show();
+        }
     }
 }

@@ -11,25 +11,25 @@ using MySql.Data.MySqlClient;
 
 namespace Train_UI
 {
-    public partial class Form6 : Form
+    public partial class Form7 : Form
     {
         DBConnect trainconnect = new DBConnect();
         DBConnect trainconnect2 = new DBConnect();
-        public Form6()
+        public Form7()
         {
             InitializeComponent();
         }
 
-        private void Form6_Load(object sender, EventArgs e)
+        private void Form7_Load(object sender, EventArgs e)
         {
             try
             {
-                MySqlDataReader hubs = trainconnect.SelectDataReader("select train_id from train");
+                MySqlDataReader hubs = trainconnect.SelectDataReader("select track_id from tracks");
 
                 //trainconnect.CloseConnection();
                 while (hubs.Read())
                 {
-                    comboBox1.Items.Add(hubs.GetString("train_id"));
+                    comboBox1.Items.Add(hubs.GetString("track_id"));
                 }
                 /*films = LoadListings();
                 foreach (Listing film in films)
@@ -56,14 +56,14 @@ namespace Train_UI
         {
             string stationid = comboBox1.GetItemText(comboBox1.SelectedItem);
 
-            MySqlDataReader stationinfo = trainconnect2.SelectDataReader("select hub_id,num_times_used,hours_travelled from train where train_id = \"" + stationid + "\"");
+            MySqlDataReader stationinfo = trainconnect2.SelectDataReader("select coming_from,going_to,weight,num_times_used from tracks where track_id = \"" + stationid + "\"");
 
             while (stationinfo.Read())
             {
-                label1.Text = stationinfo.GetString("hub_id");
-                label2.Text = stationinfo.GetString("num_times_used");
-                label3.Text = stationinfo.GetString("hours_travelled");
-                //label4.Text = stationinfo.GetString("num_passenger");
+                label1.Text = stationinfo.GetString("coming_from");
+                label2.Text = stationinfo.GetString("going_to");
+                label3.Text = stationinfo.GetString("weight");
+                label4.Text = stationinfo.GetString("num_times_used");
 
 
             }
