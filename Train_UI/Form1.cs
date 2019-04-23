@@ -790,5 +790,11 @@ namespace Train_UI
             Form9 NineForm = new Form9();
             NineForm.Show();
         }
+
+        private void button19_Click(object sender, EventArgs e)
+        {
+            Form11 ElevenForm = new Form11();
+            ElevenForm.Show();
+        }
     }
 }
