@@ -348,14 +348,16 @@ namespace Components
             if (tran.currentStatus == "initial")
                 tran.currentStatus = "running";
 
-            if (tran.currentStatus != "finished" || tran.currentStatus != "down" || tran.currentStatus != "completed")
+            // ReturningHome is when the train has finished the route and is returning home
+            // completed is when the train has finished its route and is back at its home hub
+            if (tran.currentStatus != "down" || tran.currentStatus != "completed" || tran.currentStatus != "returningHome")
             {
                 if (Master.GetTime() >= tran.ArrivalTimeNextStation)
                 {
                     if (tran.nextLocation == tran.TheRoute.Last())
                     {
 
-                        tran.currentStatus = "completed";
+                        tran.currentStatus = "returningHome";
 
                         if (tran.currentLocation.IsFreightStation == true || tran.currentLocation.IsPassengerStation == true)
                         {
@@ -371,13 +373,73 @@ namespace Components
                             tran.GenerateProfit(ListOfFrieghtRoutes[indexForRouteList].GetAmountToDeliver());
                         }
                         tran.nextLocation = tran.TheRouteBackHome[0];
+                        index = 0;
 
+                    }
+                    else if (tran.currentStatus == "returningHome")
+                    {
+                           //if (tran.ExpectedArrivalTime == currentTime)
+                        // {
+                        //tran.currentLocation = tran.TheRouteBackHome[index + 1];
+                        //tran.currentTrack = null;
+                        ////}
+                        //if (tran.currentTrack != null)
+                        //{
+                        //    //train is on a track
+                        //    tran.currentLocation = null;
+                        //}
+                        if (tran.nextLocation == tran.TheRouteBackHome.Last())
+                        {
+
+                            tran.currentStatus = "completed";
+
+                            train.currentLocation = TheRouteBackHome.Last();
+
+                            if (tran.currentLocation.IsFreightStation == true || tran.currentLocation.IsPassengerStation == true)
+                            {
+                                    Station tempStation = (Station)tran.currentLocation;
+                                    tempStation.Enter();
+                            }
+
+                        }
+                        else
+                        {
+
+                            if (tran.currentLocation.IsFreightStation == true || tran.currentLocation.IsPassengerStation == true)
+                            {
+                                Station tempStation = (Station)tran.currentLocation;
+                                tempStation.Enter();
+                            }
+
+                            // warp train to the station 
+                            // set the current vertex to the next vertex over for the next run
+                            tran.currentLocation = tran.TheRouteBackHome[index + 1];
+
+                            if (tran.currentLocation.IsFreightStation == true && tran.currentLocation == ListOfFrieghtRoutes[indexForRouteList].GetEndStation())
+                            {
+                                FreightStation tempStation = (FreightStation)tran.currentLocation;
+                                tempStation.UnloadCargo(ListOfFrieghtRoutes[indexForRouteList].GetAmountToDeliver());
+                                tran.GenerateProfit(ListOfFrieghtRoutes[indexForRouteList].GetAmountToDeliver());
+                            }
+
+                            // set the next vertex to two over from the list for the next run  
+                            tran.nextLocation = tran.TheRouteBackHome[index + 2];
+
+                            Console.WriteLine("Train Arriving at station " + tran.currentLocation);
+                        }
+
+                    }
+                
+                    tran.distanceTravelled += distance;
+
+                    index += 1;
+                    indexForRouteList += 1;
                     }
                     else
                     {
                         //if (tran.ExpectedArrivalTime == currentTime)
                         // {
-                        tran.currentLocation = tran.TheRoute[index + 1];
+                        //tran.currentLocation = tran.TheRoute[index + 1];
                         //tran.currentTrack = null;
                         ////}
                         //if (tran.currentTrack != null)
@@ -413,40 +475,38 @@ namespace Components
 
                     index += 1;
                     indexForRouteList += 1;
-                }
-               
+            }   
+            //else if (tran.currentStatus == "returningHome")
+            //{
+                    // have return something to let the master know that the train has finished running for the day
+                    // do not because it will display to the console that the train is completed every minute of the sim
+                    //Console.WriteLine("TRAIN HAS FINSIHED ROUTE");
 
-            }
-            else if (tran.currentStatus == "completed")
-            {
-                // have return something to let the master know that the train has finished running for the day
-                Console.WriteLine("TRAIN HAS FINSIHED ROUTE");
+             //       TheIntermediateRoute = graph.TrainRoute(graph, tran.currentLocation, tran.nextLocation, tran, out distance);
 
-                TheIntermediateRoute = graph.TrainRoute(graph, tran.currentLocation, tran.nextLocation, tran, out distance);
-
-                //float hoursToGetThere = (float)temp / speed;
-                //t.ExpectedArrivalTime = Master.GetTime();
-                //t.ExpectedArrivalTime.AddHours(hoursToGetThere);
-                hoursToGetThere = (float)distance / speed;
-                tran.ArrivalTimeNextStation = Master.GetTime();
-                tran.ArrivalTimeNextStation = tran.ArrivalTimeNextStation.AddHours(hoursToGetThere);
+                    //float hoursToGetThere = (float)temp / speed;
+                    //t.ExpectedArrivalTime = Master.GetTime();
+                    //t.ExpectedArrivalTime.AddHours(hoursToGetThere);
+               //     hoursToGetThere = (float)distance / speed;
+                 //   tran.ArrivalTimeNextStation = Master.GetTime();
+                   // tran.ArrivalTimeNextStation = tran.ArrivalTimeNextStation.AddHours(hoursToGetThere);
 
 
-                if (Master.GetTime() >= tran.ArrivalTimeNextStation)
-                {
-                    tran.currentLocation = tran.TheRouteBackHome[index + 1];
-                    tran.currentLocation = tran.TheRoute[index + 1];
-                    tran.nextLocation = tran.TheRouteBackHome[index + 2];
-                }
+                   // if (Master.GetTime() >= tran.ArrivalTimeNextStation)
+                   // {
+                   //     tran.currentLocation = tran.TheRouteBackHome[index + 1];
+                   //     tran.currentLocation = tran.TheRoute[index + 1];
+                   //     tran.nextLocation = tran.TheRouteBackHome[index + 2];
+                   // }
 
-            }
+            //}
 
         }
     
 
 
           // Method that should assign routes to freight trains by cycling through each train until all routes are assigned
-        //MEANT FOR USE IN THE MASTER CONTROL 
+        //MEANT TO BE CALLED IN THE MASTER CONTROL
         //Pre-Condition: Freight train has to exist on the map, controller must produce a premade list of freight trains and routes
         //Post-Condition: each train gets assigned a route until all routes are assigned
         public void AssignRouteFT(Graph g, List<FreightTrain> FTList, List<FreightRoute> FTRoute, Clock Master)
@@ -583,7 +643,7 @@ namespace Components
 
                     }
 
-
+                    // do we need a scenerio where there arn't enough routes for all trains?
                     // infinite loop breaker
                     if (unassignedRoutesCount != FR.Where(x => x.IsAssigned == false).Count())
                     {

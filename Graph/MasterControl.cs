@@ -14,7 +14,6 @@ namespace Master
     {
         static void RunSimulation(Graph g, Clock MasterClock, int numDaysInBreakpoint)
         {
-            Graph graphy = new Graph();
             DBConnect database = new DBConnect();
             List<List<string>> dbTrainFetch = database.Select("SELECT train.train_id, train.speed from train JOIN freight_train ON train.train_id = freight_train.train_id;");
             List<List<string>> dbDroutesFetch = database.Select("SELECT day, station1, station2, start_time, cargo_capacity from daily_f_routes;");
@@ -28,9 +27,10 @@ namespace Master
                 { 
                     f.trainID = t1[0];
                     f.speed = t1[1];
-                }
+
                     ft.Add(f);
                     f = new FreightTrain();
+                }
 
                }
             if (dbDroutesFetch != null && dbDroutesFetch.Count > 0)
@@ -42,9 +42,11 @@ namespace Master
                     dr.setEndStaiton(graphy.FindStation(t1[2]));
                     dr.startTime = Convert.ToDateTime(t1[3]);
                     dr.amountToDeliver = t1[4];
+                
+                
+                    fdr.Add(f);
+                    dr = new FreightRoute();
                 }
-                fdr.Add(f);
-                dr = new FreightRoute();
 
             }
 
@@ -54,59 +56,58 @@ namespace Master
             for (int i = 0; i < numDaysInBreakpoint; i++)
             {
                 //FT.Where(x => x.IsFreightTrain == true && x.IsAssigned == true)
-                foreach (var item in g.GetTrains().Where(x => x.IsFreightTrain == true))
+                foreach (var item in ft)
                 {
-                    freightTrains.Add(item);
+                    item.AssignRouteFT(g, ft, fdr.Where(x => x.startDay == i), MasterClock);
                 }
-                freightTrains[0].AssignRouteFT(g, freightTrains, dummyRoutes, MasterClock);
+               
 
                 while (MasterClock.GetTime().Hour < 23 && MasterClock.GetTime().Minute < 59)
                 {
                     MasterClock.CustomTick(0, 1, 0);
-                    foreach (var item in freightTrains)
+                    foreach (var item in freightTrains.Where(x => x.currentstatus != "completed"))
                     {
                         item.RunRouteFT(g, item, MasterClock);
                     }
                 }
+                
+                foreach(Vertex v in graphy.vertices)
+                {
+                    string station_id = v.GetID().To_String();
+                    string num_times_visited = v.GetNumTrainsVisited().To_String();
+                    string amount_delivered = v.GetAmountDelivered().To_String();
+                    string query = "UPDATE station SET num_times_used = " + num_times_visited + " where station_id = " + "'" + station_id + "'";
+                    database.Update(query);
+                    query = "UPDATE station SET cargoDelivered = " + amount_delivered + " where station_id = " + "'" + station_id + "'";
+                    database.Update(query);
+
+
+
+                }
+
+                foreach(Edge e in graphy.edges)
+                {
+                    string track_id = e.GetID().To_String();
+                    string num_times_used = e.GetNumTimesUsed().To_String();
+                    string num_collisions = e.GetNumCollisions().To_String();
+                    string query = "UPDATE track SET num_times_used = " + num_times_used + " where track_id = " + "'" + track_id + "'";
+                    database.Update(query);
+                    query = "UPDATE station SET detected_coll = " + num_collisions + " where track_id = " + "'" + track_id + "'";
+                    database.Update(query);
+
+                }
+
+                foreach(FrightTrain ft in graphy.trains)
+                {
+                    string train_id = ft.trainID.To_String();
+                    string distance_travelled = ft.distanceTravelled.To_String();
+                    string num_times_used = ft.getNumberOfTimesUsed().To_String() ;
+                    string query = "UPDATE train SET miles_travelled = " + distance_travelled + " where train_id = " + "'" + train_id + "'";
+                    database.Update(query);
+                    query = "UPDATE train SET num_times_used = " + num_times_used + " where train_id = " + "'" + train_id + "'";
+                    database.Update(query);
+                }
                 MasterClock.CustomTick(0, 1, 0);
-            }
-
-
-            foreach(Vertex v in graphy.vertices)
-            {
-                string station_id = v.GetID().To_String();
-                string num_times_visited = v.GetNumTrainsVisited().To_String();
-                string amount_delivered = v.GetAmountDelivered().To_String();
-                string query = "UPDATE station SET num_times_used = " + num_times_visited + " where station_id = " + "'" + station_id + "'";
-                database.Update(query);
-                query = "UPDATE station SET cargoDelivered = " + amount_delivered + " where station_id = " + "'" + station_id + "'";
-                database.Update(query);
-
-
-
-            }
-
-            foreach(Edge e in graphy.edges)
-            {
-                string track_id = e.GetID().To_String();
-                string num_times_used = e.GetNumTimesUsed().To_String();
-                string num_collisions = e.GetNumCollisions().To_String();
-                string query = "UPDATE track SET num_times_used = " + num_times_used + " where track_id = " + "'" + track_id + "'";
-                database.Update(query);
-                query = "UPDATE station SET detected_coll = " + num_collisions + " where track_id = " + "'" + track_id + "'";
-                database.Update(query);
-
-            }
-
-            foreach(FrightTrain ft in graphy.trains)
-            {
-                string train_id = ft.trainID.To_String();
-                string distance_travelled = ft.distanceTravelled.To_String();
-                string num_times_used = ft.getNumberOfTimesUsed().To_String() ;
-                string query = "UPDATE train SET miles_travelled = " + distance_travelled + " where train_id = " + "'" + train_id + "'";
-                database.Update(query);
-                query = "UPDATE train SET num_times_used = " + num_times_used + " where train_id = " + "'" + train_id + "'";
-                database.Update(query);
             }
             // Read from the database and assign the database's list of attributes with the ones in the MasterControl program
 
