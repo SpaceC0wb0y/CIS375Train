@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 /*
    Description: This Graph class found below will be used to generate the railway map that the program
    will run the railway simulation on. For this project, the map will be an undirected, 
@@ -29,11 +30,11 @@ namespace Train_UI
     public class Graph
     {
         //dictonary that stores each vertex's adjacency list
-        private Dictionary<Vertex, LinkedList<Node>> adjacencyList;
+        private Dictionary<Vertex, LinkedList<Node>> adjacencyList;  
         //list of all vertices currently in graph
         private List<Vertex> vertices;
         //list of all edges currently in graph
-        private List<Edge> edges;
+        private List<Track> edges;
 
         //Description: Constructor method for Graph class
         //Pre-Condition: None
@@ -43,7 +44,7 @@ namespace Train_UI
             //creates objects for all three fields
             adjacencyList = new Dictionary<Vertex, LinkedList<Node>>();
             vertices = new List<Vertex>();
-            edges = new List<Edge>();
+            edges = new List<Track>();
         }
 
         //Description: Method adds a vertex to the adjacency list graph
@@ -53,7 +54,7 @@ namespace Train_UI
         public bool AddVertex(Vertex V)
         {
             //checks if vertex is already in graph (no duplicates allowed)
-            if (adjacencyList.ContainsKey(V))
+            if (adjacencyList.ContainsKey(V)) 
             {
                 return false;  //fail
             }
@@ -88,7 +89,7 @@ namespace Train_UI
             return vertices;
         }
 
-        public List<Edge> GetEdges()
+        public List<Track> GetEdges()
         {
             return edges;
         }
@@ -97,7 +98,7 @@ namespace Train_UI
         //lists of both vertices that it connects.
         //Pre-Condition: Edge object is made beforehand
         //Post-Condition: Adds edge E to graph and edge collection
-        public bool AddEdge(Edge E)
+        public bool AddEdge(Track E)
         {
             //this variable checks if the source and destination vertices
             //were already marked as adjacent in the graph, meaning an edge between 
@@ -125,7 +126,7 @@ namespace Train_UI
             //traverses the adjacency linked list for that particular vertex
             LinkedList<Node> iterator = adjacencyList[E.GetSource()];
 
-            foreach (var item in iterator)
+            foreach(var item in iterator)
             {
                 //finds which node in the list has the adjacent vertex
                 if (E.GetDest() == item.GetVertex())
@@ -164,7 +165,7 @@ namespace Train_UI
 
             edges.Add(E);  //adds edge to edge list field
             return true;  //success
-        }
+        } 
 
         //Description: Method removes the vertex from graph and from all adjacency lists that it appears in
         //Pre-Condition: None
@@ -180,23 +181,23 @@ namespace Train_UI
             //traverses the adjacency list for V
             LinkedList<Node> iterator = adjacencyList[V];
             //checks each node in the linked list of V to find all adjacent vertices
-            foreach (var item in iterator)
+            foreach(var item in iterator)
             {
                 Vertex temp = item.GetVertex();  //checks which vertex it is adjacent to
                 LinkedList<Node> subIterator = adjacencyList[temp];  //goes to that adjacent vertex's adjacency list
                 //traverses the adjacent list to find which node holds V
-                foreach (var node in subIterator)
+                foreach(var node in subIterator)
                 {
                     //checks if V is in the current node
                     if (node.GetVertex() == V)
                     {
                         //gets all incident edges between V and the current vertex
-                        List<Edge> removal = node.GetIncidentEdges();
-                        foreach (var tempEdge in removal)
+                        List<Track> removal = node.GetIncidentEdges();
+                        foreach(var tempEdge in removal)
                         {
                             edges.Remove(tempEdge);  //removes all of the incident edges from the edge list
                         }
-
+                    
                         subIterator.Remove(node);  //removes V from the other vertex's adjacency list entirely
                         break;
                     }
@@ -212,7 +213,7 @@ namespace Train_UI
         //Description: Method removes and edge E wherever it is in the entire graph and all adjacency lists
         //Pre-Condition: None
         //Post-Condition: Removes edge from all places in the adjacency list where it appears
-        public bool RemoveEdge(Edge E)
+        public bool RemoveEdge(Track E)
         {
             Vertex tempSource = E.GetSource();  //stores the source vertex
             Vertex tempDest = E.GetDest();  //stores destination vertex
@@ -225,7 +226,7 @@ namespace Train_UI
 
             //iterates through source vertex's adjacency list
             LinkedList<Node> iterator = adjacencyList[tempSource];
-            foreach (var node in iterator)
+            foreach(var node in iterator)
             {
                 //checks each node in linked list until it finds the one
                 //with the destination vertex
@@ -235,7 +236,7 @@ namespace Train_UI
                     node.RemoveIncidentEdge(E);
 
                     //checks if the incident edge collection is now empty
-                    List<Edge> checkSum = node.GetIncidentEdges();
+                    List<Track> checkSum = node.GetIncidentEdges();
                     if (checkSum.Count == 0)
                     {
                         adjacencyList[tempSource].Remove(node);
@@ -246,15 +247,15 @@ namespace Train_UI
 
             //iterates through the destination vertex's adjacency list and does the same thing
             iterator = adjacencyList[tempDest];
-            foreach (var node in iterator)
+            foreach(var node in iterator)
             {
                 if (node.GetVertex() == tempSource)
                 {
                     node.RemoveIncidentEdge(E);
 
                     //checks if the incident edge collection is now empty
-                    List<Edge> checkSum = node.GetIncidentEdges();
-
+                    List<Track> checkSum = node.GetIncidentEdges();
+                    
                     if (checkSum.Count == 0)
                     {
                         adjacencyList[tempDest].Remove(node);
@@ -282,7 +283,7 @@ namespace Train_UI
             {
                 return adjacencyList[V];
             }
-
+          
         }
 
         //Description: Checks graph (vertex collection of graph) for the vertex based on vertex ID
@@ -290,7 +291,7 @@ namespace Train_UI
         //Post-Condition: Returns the vertex if found, throws exception if not found
         public Vertex FindVertex(string name)
         {
-            foreach (var item in vertices)
+            foreach(var item in vertices)
             {
                 if (name == item.GetID())
                 {
@@ -304,10 +305,10 @@ namespace Train_UI
         //Description: Checks graph (edge collection of graph) for the edge based on edge ID
         //Pre-Condition: None
         //Post-Condition: Returns the edge if found, throws exception if not found
-        public Edge FindEdge(Vertex startVertex, Vertex endVertex, string name)
+        public Track FindEdge(Vertex startVertex, Vertex endVertex, string name)
         {
             //checks if startVertex is one of the ends of the edge
-            foreach (var item in edges)
+            foreach(var item in edges)
             {
                 //startVertex is the source 
                 if (startVertex == item.GetSource())
@@ -347,7 +348,7 @@ namespace Train_UI
             bool isAdjacentInDest = false;  //is adjacency proven in destination vertex's adjacency list?
 
             //checks if both vertices are in the graph
-            if (!adjacencyList.ContainsKey(source))
+            if(!adjacencyList.ContainsKey(source))
             {
                 return false;
             }
@@ -360,7 +361,7 @@ namespace Train_UI
             LinkedList<Node> iterator = adjacencyList[source];
 
             //traverses the linked list to check each node for the destination vertex
-            foreach (var item in iterator)
+            foreach(var item in iterator)
             {
                 //checks if the destination vertex is found in the current node 
                 //of adjacency list
@@ -383,7 +384,7 @@ namespace Train_UI
                     isAdjacentInDest = true;  //success, vertices are adjacent in one list
                 }
             }
-
+            
             //was adjacency shown for both adjacency lists
             if (isAdjacentInSource && isAdjacentInDest)
             {
@@ -404,15 +405,15 @@ namespace Train_UI
     public class Node
     {
         private Vertex V;  //vertex at the other end of the edge
-        private List<Edge> incidentEdges;   //list of all edges between the source and destination vertex
+        private List<Track> incidentEdges;   //list of all edges between the source and destination vertex
 
         //Description: Constructor method for Node
         //Pre-Condition: Vertex must exist and be incident to source vertex
         //Post-Condition: New Node in adjacency list for a vertex is made
-        public Node(Vertex V, Edge E)
+        public Node(Vertex V, Track E)
         {
             this.V = V;
-            incidentEdges = new List<Edge>();
+            incidentEdges = new List<Track>();
             incidentEdges.Add(E);
         }
 
@@ -427,11 +428,11 @@ namespace Train_UI
         //Description: Creates a list of all incident edges between two vertices
         //Pre-Condition: None
         //Post-Condition: Returns a list of all adjacent edges
-        public List<Edge> GetIncidentEdges()
+        public List<Track> GetIncidentEdges()
         {
-            var edgeList = new List<Edge>();
+            var edgeList = new List<Track>();
 
-            foreach (var item in incidentEdges)
+            foreach(var item in incidentEdges)
             {
                 edgeList.Add(item);
             }
@@ -442,7 +443,7 @@ namespace Train_UI
         //Description: Adds a new incident edge to the edge list
         //Pre-Condition: None
         //Post-Condition: List edges has a new edge appended to it
-        public void AddIncidentEdge(Edge E)
+        public void AddIncidentEdge(Track E)
         {
             incidentEdges.Add(E);
         }
@@ -450,7 +451,7 @@ namespace Train_UI
         //Description: The method removes the edge from the incident edge collection
         //Pre-Condition: The edge exists within the collection
         //Post-Condition: The edge E is removed from teh incident edge collection
-        public void RemoveIncidentEdge(Edge E)
+        public void RemoveIncidentEdge(Track E)
         {
             incidentEdges.Remove(E);
         }
@@ -469,96 +470,96 @@ namespace Train_UI
         }
     }
 
-    //Description: Temporary Vertex class that will represent the stations
-    //and hubs.
-    public class Vertex
-    {
-        private string ID;  //name/ID of vertex
+    ////Description: Temporary Vertex class that will represent the stations
+    ////and hubs.
+    //public class Vertex
+    //{
+    //    private string ID;  //name/ID of vertex
 
-        //Description: Constructor method
-        //Pre-Condition: None
-        //Post-Condition: New vertex object made and name field initialized
-        public Vertex(string name)
-        {
-            ID = name;
-        }
+    //    //Description: Constructor method
+    //    //Pre-Condition: None
+    //    //Post-Condition: New vertex object made and name field initialized
+    //    public Vertex(string name)
+    //    {
+    //        ID = name;
+    //    }
 
-        //Description: Getter method of ID field
-        //Pre-Condition: None
-        //Post-Condition: Returns the value of ID
-        public string GetID()
-        {
-            return ID;
-        }
+    //    //Description: Getter method of ID field
+    //    //Pre-Condition: None
+    //    //Post-Condition: Returns the value of ID
+    //    public string GetID()
+    //    {
+    //        return ID;
+    //    }
 
-        //Description: Method to replace object name when it is used as a string
-        //Pre-Condition: None
-        //Post-Condition: String to be used when object reference name is used in an output statement
-        public override string ToString()
-        {
-            return "Vertex Name: " + ID;
-        }
-    }
+    //    //Description: Method to replace object name when it is used as a string
+    //    //Pre-Condition: None
+    //    //Post-Condition: String to be used when object reference name is used in an output statement
+    //    public override string ToString()
+    //    {
+    //        return "Vertex Name: " + ID;
+    //    }
+    //}
 
     //Description: Temporary edge class that theorietically represents a train track.
-    public class Edge
-    {
-        private int weight;  //weight of an track
-        private string edgeID;  //name/ID of track
-        private Vertex source;  //source vertex that track spawns from (one end)
-        private Vertex dest;    ////destination vertex that track goes to (one end)
+    //public class Track
+    //{
+    //    private int weight;  //weight of an track
+    //    private string edgeID;  //name/ID of track
+    //    private Vertex source;  //source vertex that track spawns from (one end)
+    //    private Vertex dest;    ////destination vertex that track goes to (one end)
 
-        //Description: Edge constructor that intializes the fields of a track
-        //Pre-Condition: Both source and destination vertex must exist in graph
-        //Post-Condition: New edge added to track
-        public Edge(string name, Vertex source, Vertex dest, int weight)
-        {
-            edgeID = name;
-            this.weight = weight;
+    //    //Description: Edge constructor that intializes the fields of a track
+    //    //Pre-Condition: Both source and destination vertex must exist in graph
+    //    //Post-Condition: New edge added to track
+    //    public Track(string name, Vertex source, Vertex dest, int weight)
+    //    {
+    //        edgeID = name;
+    //        this.weight = weight;
 
-            this.source = source;
-            this.dest = dest;
-        }
+    //        this.source = source;
+    //        this.dest = dest;
+    //    }
 
-        //Description: Returns the edge ID
-        //Pre-Condition: None
-        //Post-Condition: Returns ID as a string
-        public string GetID()
-        {
-            return edgeID;
-        }
+    //    //Description: Returns the edge ID
+    //    //Pre-Condition: None
+    //    //Post-Condition: Returns ID as a string
+    //    public string GetID()
+    //    {
+    //        return edgeID;
+    //    }
 
-        //Description: Return the edge weight
-        //Pre-Condition: None
-        //Post-Condition: Return edge weight as an int
-        public int GetWeight()
-        {
-            return weight;
-        }
+    //    //Description: Return the edge weight
+    //    //Pre-Condition: None
+    //    //Post-Condition: Return edge weight as an int
+    //    public int GetWeight()
+    //    {
+    //        return weight;
+    //    }
 
-        //Description: Getter for source vertex
-        //Pre-Condition: None
-        //Post-Condition: Returns the source vertex object
-        public Vertex GetSource()
-        {
-            return source;
-        }
+    //    //Description: Getter for source vertex
+    //    //Pre-Condition: None
+    //    //Post-Condition: Returns the source vertex object
+    //    public Vertex GetSource()
+    //    {
+    //        return source;
+    //    }
 
-        //Description: Getter for destination vertex
-        //Pre-Condition: None
-        //Post-Condition: Returns the destination vertex object
-        public Vertex GetDest()
-        {
-            return dest;
-        }
+    //    //Description: Getter for destination vertex
+    //    //Pre-Condition: None
+    //    //Post-Condition: Returns the destination vertex object
+    //    public Vertex GetDest()
+    //    {
+    //        return dest;
+    //    }
 
-        //Description: Method to replace object name when it is used as a string
-        //Pre-Condition: None
-        //Post-Condition: String to be used when object reference name is used in an output statement
-        public override string ToString()
-        {
-            return "Edge: " + edgeID + ", " + source.GetID() + "-" + dest.GetID() + ", Edge Weight: " + weight;
-        }
-    }
+    //    //Description: Method to replace object name when it is used as a string
+    //    //Pre-Condition: None
+    //    //Post-Condition: String to be used when object reference name is used in an output statement
+    //    public override string ToString()
+    //    {
+    //        return "Edge: " + edgeID + ", " + source.GetID() + "-" + dest.GetID() + ", Edge Weight: " + weight;
+    //    }
+    //}
 
 }

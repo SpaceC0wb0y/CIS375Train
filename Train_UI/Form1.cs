@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 
 
@@ -830,6 +831,82 @@ namespace Train_UI
 
         private void button24_Click(object sender, EventArgs e)
         {
+            Graph railWay = new Graph();
+            DataTable tracks = trainconnect2.SelectDataTable("select track_id,coming_from,going_to from track");
+             foreach (DataRow dr in tracks.Rows)
+            {
+                // MyFunction(dr["Id"].ToString(), dr["Name"].ToString());
+                string coming_from = dr["coming_from"].ToString();
+                string going_to = dr["going_to"].ToString();
+                string station_type = "";
+                FreightStation A;
+                PassengerStation B;
+                Hub C;
+                Hub D;
+
+                if (coming_from.Contains("STATION"))
+                {
+                    string x = coming_from;
+                    DataTable station = trainconnect2.SelectDataTable("select station_type from station where station_id = \"" + x + "\"");
+                    foreach (DataRow dt in station.Rows)
+                    {
+                        if (dt["station_type"].ToString().Contains("F"))
+                        {
+                            A = new FreightStation(x);
+                        }
+                        else if (dt["station_type"].ToString().Contains("P"))
+                        {
+                            DataTable pStation = trainconnect2.SelectDataTable("select ticket_price,range_on,range_off from station where station_id = \"" + x + "\"");
+
+                            foreach (DataRow du in pStation.Rows)
+                            {
+                                B = new PassengerStation(x,Convert.ToInt32(du["ticket_price"]),Convert.ToInt32(du["range_on"]), Convert.ToInt32(du["range_on"]), Convert.ToInt32(du["range_off"]),Convert.ToInt32(du["range_off"]));
+                                
+                            }
+                           
+                        }
+                    }
+                }
+
+                if (going_to.Contains("STATION"))
+                {
+                    string x = going_to;
+                    DataTable station = trainconnect2.SelectDataTable("select station_type from station where station_id = \"" + x + "\"");
+                    foreach (DataRow dt in station.Rows)
+                    {
+                        if (dt["station_type"].ToString().Contains("F"))
+                        {
+                            A = new FreightStation(x);
+                        }
+                        else if (dt["station_type"].ToString().Contains("P"))
+                        {
+                            DataTable pStation = trainconnect2.SelectDataTable("select ticket_price,range_on,range_off from station where station_id = \"" + x + "\"");
+
+                            foreach (DataRow du in pStation.Rows)
+                            {
+                                B = new PassengerStation(x, Convert.ToInt32(du["ticket_price"]), Convert.ToInt32(du["range_on"]), Convert.ToInt32(du["range_on"]), Convert.ToInt32(du["range_off"]), Convert.ToInt32(du["range_off"]));
+
+                            }
+
+                        }
+                    }
+                }
+
+                if (coming_from.Contains("HUB"))
+                {
+                    string x = coming_from;
+                    C = new Hub(x);
+
+                }
+
+                if (going_to.Contains("HUB"))
+                {
+                    string x = going_to;
+                    D = new Hub(x);
+                }
+
+
+            }
 
         }
     }
