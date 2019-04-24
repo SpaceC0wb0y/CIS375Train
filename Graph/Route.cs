@@ -15,12 +15,13 @@ namespace Route
         public bool IsDaily {get; set; }
         private Vertex startStation;
         private Vertex endStation;
-        private DateTime startTime;
-        private int amountToDeliver;
+        private DateTime startTime { get; set; }
+        public int startDay { get; set; }
+        public int amountToDeliver { get; set; }
 
         public bool IsAssigned {get; set; }
 
-        public FreightRoute(bool isRepeatable, bool isDaily, bool isAssigned , Station station1, Station station2, DateTime startTime, int amountToDeliver)
+        public FreightRoute(bool isRepeatable, bool isDaily, bool isAssigned , Vertex station1, Vertex station2, DateTime startTime, int amountToDeliver)
         {
             IsRepeatable = isRepeatable;
             IsDaily = isDaily;
@@ -39,6 +40,11 @@ namespace Route
         public void SetStartStation(Vertex stat)
         {
             this.startStation = stat;
+        }
+
+        public void SetEndStation(Vertex stat)
+        {
+            this.endStation = stat;
         }
 
         public Vertex GetEndStation()

@@ -89,7 +89,7 @@ namespace Graph
         //Description: Traverses the adjacency list produced in map generation to find the shortest path from two verticies
         //Pre-Condition: Both Verticies exist on the map, and there is at least one edge between them
         //Post-Condition: The a list of verticies that contains the shortest path as well as the distance of the path is returneds
-        public List<Vertex> TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran, out int distance)
+        public List<Vertex> TrainRoute(Graph graph, Vertex source, Vertex dest, Train tran, out int distance, out Track currentTrack)
         {
             int infinity = 1000000;
             List<Vertex> unvisitedNodes = new List<Vertex>();
@@ -98,6 +98,9 @@ namespace Graph
             Vertex currentStation = source;
             LinkedList<Node> neighborUnvisitedNodes = new LinkedList<Node>();
             distance = 1000000;
+            currentTrack = null;
+
+            tran.incrementNumberOfTimesUsed;
 
             List<ShortestPath> shortestPaths = new List<ShortestPath>();
 
@@ -145,7 +148,9 @@ namespace Graph
                             //check if the edge is not occupied before assigning it to shortest edge
                             if (items.GetIncidentEdges()[edgeNum].GetAvailability() == true)
                             {
-                                shortestEdge = items.GetIncidentEdges()[edgeNum].GetDistance();                     
+                                shortestEdge = items.GetIncidentEdges()[edgeNum].GetDistance();
+                                currentTrack = items.GetIncidentEdges()[edgeNum];
+                                items.GetIncidentEdges()[edgeNum].IncrementNumTimesUsed();
                                 
                             }
                             else
