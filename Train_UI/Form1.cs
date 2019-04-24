@@ -20,6 +20,7 @@ namespace Train_UI
         int runtime = 0;
         string passcap = "";
         DBConnect trainconnect = new DBConnect();
+        DBConnect trainconnect2 = new DBConnect();
         public Form1()
         {
             InitializeComponent();
@@ -813,6 +814,23 @@ namespace Train_UI
         {
             Form14 fourteenForm = new Form14();
             fourteenForm.Show();
+        }
+
+        private void button23_Click(object sender, EventArgs e)
+        {
+            Form16 sixteenForm = new Form16();
+            sixteenForm.Show();
+        }
+
+        private void button22_Click(object sender, EventArgs e)
+        {
+            Form15 fifteenForm = new Form15();
+            fifteenForm.Show();
+        }
+
+        private void button24_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
