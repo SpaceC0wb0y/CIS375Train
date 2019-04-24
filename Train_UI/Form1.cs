@@ -796,5 +796,23 @@ namespace Train_UI
             Form11 ElevenForm = new Form11();
             ElevenForm.Show();
         }
+
+        private void button18_Click(object sender, EventArgs e)
+        {
+            Form12 twelveForm = new Form12();
+            twelveForm.Show();
+        }
+
+        private void button20_Click(object sender, EventArgs e)
+        {
+            Form13 thirteenForm = new Form13();
+            thirteenForm.Show();
+        }
+
+        private void button21_Click(object sender, EventArgs e)
+        {
+            Form14 fourteenForm = new Form14();
+            fourteenForm.Show();
+        }
     }
 }
