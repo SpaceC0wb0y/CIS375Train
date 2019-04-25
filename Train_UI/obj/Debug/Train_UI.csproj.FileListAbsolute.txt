@@ -53,9 +53,6 @@ C:\Users\god\source\repos\Train_UI\Train_UI\obj\Debug\Train_UI.Form9.resources
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\bin\Debug\Train_UI.exe.config
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\bin\Debug\Train_UI.exe
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\bin\Debug\Train_UI.pdb
-C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\bin\Debug\Google.Protobuf.dll
-C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\bin\Debug\MySql.Data.xml
-C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\obj\Debug\Train_UI.csprojAssemblyReference.cache
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\obj\Debug\Train_UI.Form1.resources
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\obj\Debug\Train_UI.Form11.resources
 C:\Users\Admin\Source\Repos\SpaceC0wb0y\CIS375Train\Train_UI\obj\Debug\Train_UI.Form2.resources

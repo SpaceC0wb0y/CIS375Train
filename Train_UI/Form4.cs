@@ -56,7 +56,7 @@ namespace Train_UI
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-           
+            
             string stationid = comboBox1.GetItemText(comboBox1.SelectedItem);
             
             MySqlDataReader stationinfo = trainconnect2.SelectDataReader("select station_id,station_type,range_on,range_off,ticket_price from station where station_id = \"" + stationid +"\"");
@@ -72,6 +72,7 @@ namespace Train_UI
             }
 
             trainconnect2.CloseConnection();
+
             
 
         }

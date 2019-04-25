@@ -63,7 +63,7 @@ namespace Train_UI
 
         public void reload()
         {
-            MySqlDataReader hubs = trainconnect.SelectDataReader("select track_id from tracks");
+            MySqlDataReader hubs = trainconnect3.SelectDataReader("select track_id from tracks");
 
 
             while (hubs.Read())

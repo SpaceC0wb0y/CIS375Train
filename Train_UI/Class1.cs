@@ -32,17 +32,7 @@ namespace Train_UI
                }
 
           }
-          ~DBConnect()
-          {
-               if (CloseConnection())
-               {
-                    Console.WriteLine("Connection is successfully closed..");
-               }
-               else
-               {
-                    Console.WriteLine("Something went wrong whie closing DB connection..");
-               }
-          }
+         
 
           //Initialize values
           private void Initialize()
@@ -179,11 +169,30 @@ namespace Train_UI
           }
           public MySqlDataReader SelectDataReader(string query)
           {
-               MySqlCommand cmd = new MySqlCommand(query, connection);
+            bool isClosed = this.CloseConnection();
+               if(isClosed == true)
+            {
+                this.OpenConnection();
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                return dataReader;
+            }
+            else
+            {
+                MySqlCommand cmd = new MySqlCommand(query, connection);
+                //Create a data reader and Execute the command
+                MySqlDataReader dataReader = cmd.ExecuteReader();
+
+                return dataReader;
+            }
+             
+              /* MySqlCommand cmd = new MySqlCommand(query, connection);
                //Create a data reader and Execute the command
                MySqlDataReader dataReader = cmd.ExecuteReader();
 
-               return dataReader;
+               return dataReader;*/
           }
           public DataTable SelectDataTable(string query)
           {

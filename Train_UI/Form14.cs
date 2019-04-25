@@ -16,6 +16,7 @@ namespace Train_UI
     {
         DBConnect trainconnect = new DBConnect();
         DBConnect trainconnect2 = new DBConnect();
+        DBConnect trainconnect3 = new DBConnect();
         public Form14()
         {
             InitializeComponent();
@@ -60,7 +61,7 @@ namespace Train_UI
 
         public void reload()
         {
-            MySqlDataReader hubs = trainconnect.SelectDataReader("select train_id from train");
+            MySqlDataReader hubs = trainconnect3.SelectDataReader("select train_id from train");
 
 
             while (hubs.Read())
