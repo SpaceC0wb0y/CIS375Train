@@ -24,5 +24,10 @@ namespace Train_UI
             trainconnect.Insert("hub", "hub_id", hub_id);
             MessageBox.Show("Success!");
         }
+
+        private void Form12_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

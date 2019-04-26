@@ -16,5 +16,10 @@ namespace Train_UI
         {
             InitializeComponent();
         }
+
+        private void Form3_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

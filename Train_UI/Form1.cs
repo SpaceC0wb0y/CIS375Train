@@ -20,6 +20,14 @@ namespace Train_UI
     {
         int runtime = 0;
         string passcap = "";
+        int structseqnum = 1;
+        int repeatseqnum = 1;
+        int dailyseqnum = 1;
+        int configseqnum = 1;
+        int hubcount = 0;
+        int stationcount = 0;
+        int traincount = 0;
+        int trackcount = 0;
         DBConnect trainconnect = new DBConnect();
         DBConnect trainconnect2 = new DBConnect();
         public Form1()
@@ -84,11 +92,14 @@ namespace Train_UI
                         string line = string.Empty;
                         string[] storeline;
                         //int i = 0;
-                        int seqnum;
+                        int seqnum = 0;
                         int hubnum = 0;
                         int stationnum = 0;
                         int edgenum = 0;
                         int locomotivenum = 0;
+                        int trailernum1 =0;
+                        int trailernum2=0;
+                        
                         string table = string.Empty;
 
 
@@ -103,10 +114,13 @@ namespace Train_UI
                                 storeline = line.Split(new char[] { ' ', '"', ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 if (j == 0)
                                 {
+
                                     var telaBuilder = new StringBuilder(storeline[0]);
                                     telaBuilder[0] = '0';
                                     string hold = telaBuilder.ToString();
                                     seqnum = Convert.ToInt32(hold);
+
+
 
                                     for (int i = 1; i < storeline.Length; i++)
                                     {
@@ -123,105 +137,130 @@ namespace Train_UI
 
                                 }
 
-                                else if (storeline.Length == 0)
-                                {
-                                    // Do Nothing
-                                }
+                                if (seqnum == structseqnum)
+                                { 
 
-                                else if (storeline[0] == "C")
-                                {
-                                    if (storeline[1] != "" && storeline[1] == "HUB")
+
+
+                                    if (storeline.Length == 0)
                                     {
-                                        hubnum = Convert.ToInt32(storeline[2]);
-                                        table = "hub";
-                                        //label3.Text = table;
+                                        // Do Nothing
+                                    }
+
+                                    else if (storeline[0] == "C")
+                                    {
+                                        if (storeline[1] != "" && storeline[1] == "HUB")
+                                        {
+                                            hubnum = Convert.ToInt32(storeline[2]);
+                                            table = "hub";
+                                            //label3.Text = table;
+
+                                        }
+
+                                        else if (storeline[1] != "" && storeline[1] == "STATION")
+                                        {
+                                            stationnum = Convert.ToInt32(storeline[2]);
+                                            table = "station";
+
+                                        }
+                                        else if (storeline[1] != "" && storeline[1] == "EDGE")
+                                        {
+                                            edgenum = Convert.ToInt32(storeline[2]);
+                                            table = "tracks";
+
+                                        }
+                                        else if (storeline[1] != "" && storeline[1] == "LOCOMOTIVE")
+                                        {
+                                            locomotivenum = Convert.ToInt32(storeline[2]);
+                                            table = "train";
+
+                                        }
+                                    }
+
+
+
+                                    else if (storeline[0] == "T")
+                                    {
+                                        trailernum1 = Convert.ToInt32(storeline[1]);
+                                        trailernum2 = Convert.ToInt32(storeline[2]);
+
+                                    }
+                                    else
+                                    {
+
+
+                                        if (table == "hub")
+                                        {
+                                            
+                                            //trainconnect.Insert("")
+                                            //trainconnect.Insert("INSERT into " + table + "(hub_id) VALUES(\"" + storeline[0] + "\")");
+                                            trainconnect.Insert(table, "hub_id", storeline[0]);
+                                            ++hubcount;
+                                        }
+                                        else if (table == "station")
+                                        {
+                                            
+                                            int rangeon = Convert.ToInt32(storeline[4]) - Convert.ToInt32(storeline[3]);
+                                            int rangeoff = Convert.ToInt32(storeline[6]) - Convert.ToInt32(storeline[5]);
+                                            string ron = Convert.ToString(rangeon);
+                                            string roff = Convert.ToString(rangeoff);
+                                            //trainconnect.Insert("INSERT into " + table + "(station_id,station_type,range_on,range_off,ticket_price) VALUES(\"" + storeline[0] + "\" , \"" + storeline[1] + "\" , \"" + ron + "\" , \"" + roff + "\" , \"" + storeline[7] + "\")");
+
+                                            string send = storeline[0] + "," + storeline[1] + "," + ron + "," + roff + "," + storeline[7];
+                                            trainconnect.Insert(table, "station_id,station_type,range_on,range_off,ticket_price", send);
+                                            ++stationcount;
+                                        }
+
+                                        else if (table == "tracks")
+                                        {
+                                           
+                                            string send = storeline[0] + "," + storeline[1] + "," + storeline[2];
+                                            trainconnect.Insert(table, "coming_from,going_to,weight", send);
+                                            ++trackcount;
+                                        }
+                                        else if (table == "train")
+                                        {
+                                            
+                                            string send = storeline[0] + "," + storeline[1];
+                                            trainconnect.Insert(table, "train_id,hub_id", send);
+                                            if (storeline[2] == "P")
+                                            {
+                                                send = storeline[0];
+                                                table = "passenger_train";
+                                                trainconnect.Insert(table, "train_id", send);
+                                                
+
+                                            }
+                                            else if (storeline[2] == "F")
+                                            {
+                                                send = storeline[0];
+                                                table = "freight_train";
+                                                trainconnect.Insert(table, "train_id", send);
+                                                
+                                            }
+                                           
+                                            table = "train";
+                                            ++traincount;
+
+
+                                        }
+                                        else
+                                        {
+                                            // DO NOTHING
+                                        }
 
                                     }
 
-                                    else if (storeline[1] != "" && storeline[1] == "STATION")
-                                    {
-                                        stationnum = Convert.ToInt32(storeline[2]);
-                                        table = "station";
-
-                                    }
-                                    else if (storeline[1] != "" && storeline[1] == "EDGE")
-                                    {
-                                        edgenum = Convert.ToInt32(storeline[2]);
-                                        table = "tracks";
-
-                                    }
-                                    else if (storeline[1] != "" && storeline[1] == "LOCOMOTIVE")
-                                    {
-                                        locomotivenum = Convert.ToInt32(storeline[2]);
-                                        table = "train";
-
-                                    }
-                                }
-
-
-
-                                else if (storeline[0] == "T")
-                                {
-                                    //label4.Text += " " + storeline[1] + " " + storeline[2];
 
                                 }
                                 else
                                 {
-
-
-                                    if (table == "hub")
-                                    {
-                                        //trainconnect.Insert("")
-                                        //trainconnect.Insert("INSERT into " + table + "(hub_id) VALUES(\"" + storeline[0] + "\")");
-                                        trainconnect.Insert(table,"hub_id",storeline[0]);
-                                    }
-                                    else if (table == "station")
-                                    {
-
-                                        int rangeon = Convert.ToInt32(storeline[4]) - Convert.ToInt32(storeline[3]);
-                                        int rangeoff = Convert.ToInt32(storeline[6]) - Convert.ToInt32(storeline[5]);
-                                        string ron = Convert.ToString(rangeon);
-                                        string roff = Convert.ToString(rangeoff);
-                                        //trainconnect.Insert("INSERT into " + table + "(station_id,station_type,range_on,range_off,ticket_price) VALUES(\"" + storeline[0] + "\" , \"" + storeline[1] + "\" , \"" + ron + "\" , \"" + roff + "\" , \"" + storeline[7] + "\")");
-                                        
-                                        string send = storeline[0] + "," + storeline[1] + "," + ron + "," + roff + "," + storeline[7];
-                                        trainconnect.Insert(table, "station_id,station_type,range_on,range_off,ticket_price", send);
-                                    }
-
-                                    else if (table == "tracks")
-                                    {
-                                        string send = storeline[0] + "," + storeline[1] + "," + storeline[2];
-                                        trainconnect.Insert(table, "coming_from,going_to,weight", send);
-                                    }
-                                    else if (table == "train")
-                                    {
-                                        string send = storeline[0] + "," + storeline[1];
-                                        trainconnect.Insert(table, "train_id,hub_id", send);
-                                        if (storeline[2] == "P")
-                                        {
-                                            send = storeline[0];
-                                            table = "passenger_train";
-                                            trainconnect.Insert(table, "train_id", send);
-
-                                        }
-                                        else if (storeline[2] == "F")
-                                        {
-                                            send = storeline[0];
-                                            table = "freight_train";
-                                            trainconnect.Insert(table, "train_id", send);
-                                        }
-                                        table = "train";
-                                        
-                                       
-                                        
-                                    }
-                                    else 
-                                    {
-                                        // DO NOTHING
-                                    }
-
+                                    MessageBox.Show("Wrong Sequence");
+                                    break;
                                 }
-                            }
+                          
+                                }
+
 
 
 
@@ -234,6 +273,69 @@ namespace Train_UI
                             ++j;
 
                         } while (line != null);
+                        
+                        if(hubcount != hubnum)
+                        {
+                            MessageBox.Show("Wrong number of hubs");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                        }
+                        else if(stationcount != stationnum)
+                        {
+                            MessageBox.Show("Wrong number of stations");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                        }
+                        else if(traincount != locomotivenum)
+                        {
+                            MessageBox.Show("Wrong number of trains");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                        }
+                        else if(trackcount != edgenum)
+                        {
+                            MessageBox.Show("Wrong number of tracks");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                        }
+                        int total = edgenum + locomotivenum + stationnum + hubnum;
+                        if(total != trailernum1)
+                        {
+                            MessageBox.Show("Error in Trailer");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                            
+                        }
+                        else if (total-structseqnum != trailernum2)
+                        {
+                            MessageBox.Show("Error in Trailer");
+                            trainconnect.Delete("DELETE from train");
+                            trainconnect.Delete("DELETE from hub");
+                            trainconnect.Delete("DELETE from tracks");
+                            trainconnect.Delete("DELETE from passenger_train");
+                            trainconnect.Delete("DELETE from freight_train");
+                            
+                        }
+                        else
+                        {
+                            ++structseqnum;
+                        }
+                        
                     }
                 }
             }
@@ -832,7 +934,7 @@ namespace Train_UI
         private void button24_Click(object sender, EventArgs e)
         {
             Graph railWay = new Graph();
-            DataTable tracks = trainconnect2.SelectDataTable("select track_id,coming_from,going_to from track");
+            DataTable tracks = trainconnect2.SelectDataTable("select track_id,coming_from,going_to from tracks");
              foreach (DataRow dr in tracks.Rows)
             {
                 // MyFunction(dr["Id"].ToString(), dr["Name"].ToString());

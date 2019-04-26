@@ -25,15 +25,45 @@ namespace Train_UI
             {
                 string train_id = textBox1.Text;
                 string hub_id = textBox2.Text;
+                string train_type = listBox1.Text;
                 string send = train_id + "," + hub_id;
-                trainconnect.Insert("train", "train_id,hub_id", send);
-                MessageBox.Show("Success!");
+                if (train_type == "P")
+                {
+                    trainconnect.Insert("train", "train_id,hub_id", send);
+                    trainconnect.Insert("passenger_train", "train_id", train_id);
+                    MessageBox.Show("Success!");
+                }
+                else if ( train_type == "F")
+                {
+                    trainconnect.Insert("train", "train_id,hub_id", send);
+                    trainconnect.Insert("freight_train", "train_id", train_id);
+                    MessageBox.Show("Success!");
+                }
+          
+                
+                
+                
             }
 
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void Form13_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

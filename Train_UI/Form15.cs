@@ -35,5 +35,10 @@ namespace Train_UI
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void Form15_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
